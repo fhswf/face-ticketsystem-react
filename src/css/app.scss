@@ -1,0 +1,53 @@
+$lightGray: #f6f6f6;
+$borderGray: #adadad;
+
+html, body {
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  width: 100%;
+}
+
+#page {
+  display: flex;
+  flex-flow: column;
+  height: 100%;
+  width: 100%;
+}
+
+#topNav {
+  background: red;
+  flex-grow: 0;
+  flex-shrink: 1;
+  flex-basis: auto;
+}
+
+main {
+  width: 100%;
+  flex-grow: 1;
+  flex-shrink: 1;
+  flex-basis: auto;
+  /* flex config for children */
+  display: flex;
+  flex-direction: row;
+}
+
+main .leftNav {
+  flex: 0.2;
+  background: $lightGray;
+  padding: 10px;
+  border-right: $borderGray 1px solid;
+}
+
+main .content {
+  flex: 0.5;
+  padding: 50px;
+}
+
+#footer {
+  display: none;
+  flex-grow: 0;
+  flex-shrink: 1;
+  height: 30px;
+  background: $lightGray;
+}
