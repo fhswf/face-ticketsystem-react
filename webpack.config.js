@@ -1,10 +1,16 @@
 const HtmlWebPackPlugin = require("html-webpack-plugin");
+// const publicPath = require('./src/js/config/Config').basepath;
+
 module.exports = {
     output: {
         publicPath: '/'
     },
     devServer: {
-        historyApiFallback: true,
+        // publicPath,
+        // historyApiFallback: {
+        //     index: publicPath
+        // }
+        historyApiFallback: true
     },
     module: {
         rules: [
