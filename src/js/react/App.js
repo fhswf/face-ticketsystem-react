@@ -4,23 +4,45 @@ import {BrowserRouter, Redirect, Route, Switch} from "react-router-dom";
 import {ActionCreators} from "../redux/actions/ActionCreators";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
+import LoginView from "./views/LoginView";
+import Navigation from "./views/Navigation";
+import config from '../config/Config';
 
 class App extends Component {
+    constructor(props) {
+        super(props);
+    }
+
     render() {
-        return <div id="page">
-            <BrowserRouter>
-                <main>
-                    <Switch>
-                        <Route path="/login">
-                            <h1>TODO: Replace me with highorder component</h1>
-                        </Route>
-                        <Route path="/">
-                            <Redirect to="/login" />
-                        </Route>
-                    </Switch>
-                </main>
-            </BrowserRouter>
-        </div>
+        return <BrowserRouter id='browser-router' basename={config.basepath}>
+            <Navigation />
+            <main>
+                <Switch>
+                    <Route path="/login">
+                        {
+                            this.props.user.data.loggedIn && <Redirect to="/home"/>
+                        }
+                        <LoginView/>
+                    </Route>
+                    <Route path="/home">
+                        {
+                            !this.props.user.data.loggedIn && <Redirect to="/login"/>
+                        }
+                        <div>
+                            <h1>TEST</h1>
+                        </div>
+                    </Route>
+                    <Route path="/">
+                        {
+                            this.props.user.data.loggedIn && <Redirect to="/home"/>
+                        }
+                        {
+                            !this.props.user.data.loggedIn && <Redirect to="/login"/>
+                        }
+                    </Route>
+                </Switch>
+            </main>
+        </BrowserRouter>
     }
 }
 
@@ -30,6 +52,7 @@ class App extends Component {
  */
 function mapStateToProps(state) {
     return {
+        user: state.user
     };
 }
 
