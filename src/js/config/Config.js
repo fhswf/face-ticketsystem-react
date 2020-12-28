@@ -4,7 +4,6 @@ import { CookieStorage } from 'redux-persist-cookie-storage';
 import Cookies from 'cookies-js';
 
 const config = {
-    basepath: 'face-tickets/',
     backend: {
         endpoint: "http://localhost:3000"
     },

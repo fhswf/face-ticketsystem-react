@@ -6,7 +6,8 @@ import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import LoginView from "./views/LoginView";
 import Navigation from "./views/Navigation";
-import config from '../config/Config';
+
+const __webpack_public_path__ = process.env.ASSET_PATH;
 
 class App extends Component {
     constructor(props) {
@@ -14,7 +15,7 @@ class App extends Component {
     }
 
     render() {
-        return <BrowserRouter id='browser-router' basename={config.basepath}>
+        return <BrowserRouter id='browser-router' basename={process.env.ASSET_PATH}>
             <Navigation />
             <main>
                 <Switch>

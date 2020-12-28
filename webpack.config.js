@@ -1,14 +1,26 @@
 const HtmlWebPackPlugin = require("html-webpack-plugin");
-// const publicPath = require('./src/js/config/Config').basepath;
+const Webpack = require('webpack');
+const dotenv = require('dotenv').config({path: '.webpack.env'});
+
+const ASSET_PATH = process.env.ASSET_PATH || '/';
 
 module.exports = {
+    entry: {
+        main: './src/index.js',
+        vendor: [
+            'events',
+            'react',
+            'react-dom',
+            'react-redux'
+        ]
+    },
+    devtool: 'source-map',
     output: {
-        publicPath: '/'
+        publicPath: ASSET_PATH
     },
     devServer: {
-        // publicPath,
         // historyApiFallback: {
-        //     index: publicPath
+        //     index: ASSET_PATH
         // }
         historyApiFallback: true
     },
@@ -43,6 +55,13 @@ module.exports = {
         ]
     },
     plugins: [
+        new Webpack.DefinePlugin({
+            'process.env.ASSET_PATH': JSON.stringify(ASSET_PATH),
+            BASENAME: JSON.stringify(ASSET_PATH)
+        }),
+        new Webpack.DefinePlugin({
+            "process.env": dotenv.parsed
+        }),
         new HtmlWebPackPlugin({
             template: "./src/index.html",
             filename: "./index.html"
