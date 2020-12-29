@@ -5,7 +5,7 @@ import Cookies from 'cookies-js';
 
 const config = {
     backend: {
-        endpoint: "http://localhost:3000"
+        endpoint: "https://jupiter.fh-swf.de/fts-api"
     },
     storage: {
         root: {
