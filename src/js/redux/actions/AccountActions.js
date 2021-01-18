@@ -90,3 +90,45 @@ export function logout() {
     }
 }
 
+export const REQUEST_EMAIL_OCCUPIED = "REQUEST_EMAIL_OCCUPIED";
+
+export function requestEmailOccupied() {
+    return {
+        type: REQUEST_EMAIL_OCCUPIED
+    }
+}
+
+export const RECEIVE_EMAIL_OCCUPIED = "RECEIVE_EMAIL_OCCUPIED";
+
+export function receiveEmailOccupied(isOccupied, status = fetchStatusType.success, error = null) {
+    return {
+        isOccupied: isOccupied,
+        receivedAt: Date.now(),
+        status: status,
+        error: error,
+        type: RECEIVE_EMAIL_OCCUPIED
+    }
+}
+
+export function isEmailOccupied(email) {
+    return (dispatch, getState) => {
+        dispatch(requestEmailOccupied());
+        return new Promise((resolve, reject) => {
+            client.httpPost('/auth/checkEmail', {email})
+                .then(result => {
+                    if(result && result.hasOwnProperty('occupied')) {
+                        dispatch(receiveEmailOccupied(result.occupied));
+                        resolve(result.occupied);
+                    }
+                    else {
+                        dispatch(receiveEmailOccupied(true, fetchStatusType.error));
+                        resolve(true);
+                    }
+                })
+                .catch(err => {
+                    dispatch(receiveEmailOccupied(true, fetchStatusType.error, err));
+                    reject(err);
+                });
+        });
+    }
+}

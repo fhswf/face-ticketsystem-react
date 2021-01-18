@@ -22,6 +22,25 @@ export const emptyUser = {
     faceId: ''
 };
 
+export const emailOccupied = createReducer({
+    isFetching: false,
+    lastUpdated: undefined,
+    status: fetchStatusType.success,
+    error: null,
+    isOccupied: false
+}, {
+    [AccountActions.REQUEST_EMAIL_OCCUPIED](draft, action) {
+        draft.isFetching = true;
+    },
+    [AccountActions.RECEIVE_EMAIL_OCCUPIED](draft, action) {
+        draft.isFetching = false;
+        draft.lastUpdated = action.receivedAt;
+        draft.status = action.status;
+        draft.error = action.error;
+        draft.isOccupied = action.isOccupied;
+    }
+});
+
 export const user = createReducer({
     data: {
         value: emptyUser,

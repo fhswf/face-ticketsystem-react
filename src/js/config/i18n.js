@@ -21,8 +21,22 @@ const translationObject = {
             logoutFail: 'Fehler beim Ausloggen'
         },
         feedback: {
-            enterEmailLogin: 'Bitte geben Sie Ihre E-Mail Adresse an.',
-            enterPasswordLogin: 'Bitte geben Sie Ihr Passwort ein.'
+            enterEmailLogin: 'Bitte geben Sie Ihre E-Mail Adresse ein.',
+            enterPasswordLogin: 'Bitte geben Sie Ihr Passwort ein.',
+            enterEmailRegister: 'Bitte geben Sie eine gültige E-Mail Adresse ein.',
+            emailOccupied: 'Diese E-Mail ist bereits vergeben.',
+            enterPasswordRegister: 'Bitte geben Sie ein Passwort ein.',
+            enterRepeatPassword: 'Bitte wiederholen Sie Ihr Passwort.',
+            passwordTooShort: 'Ihr Password muss mindestens %{min} Zeichen lang sein.',
+            passwordsDontMatch: 'Die beiden Passwörter stimmen nicht über ein.',
+            enterSalutation: 'Bitte wählen Sie Ihre Anrede aus.',
+            enterFirstName: 'Bitte geben Sie Ihren Vornamen ein.',
+            enterLastName: 'Bitte geben Sie Ihren Nachnamen ein.',
+            enterPhone: 'Bitte geben Sie Ihre Telefonnummer ein.',
+            enterZip: 'Bitte geben Sie Ihre Postleitzahl ein.',
+            enterCity: 'Bitte geben Sie die Stadt an, in welcher Sie wohnen.',
+            enterAddress1: 'Bitte geben Sie Ihre Anschrift (Straße und Hausnummer) ein.',
+            uploadImage: 'Bitte laden Sie ein Foto von sich hoch.'
         },
         data: {
             email: 'E-Mail',
