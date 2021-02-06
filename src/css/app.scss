@@ -7,7 +7,7 @@ html, body {
   width: 100%;
 }
 
-#login-view {
+#basic-form {
   justify-content: center;
   align-content: center;
   min-width: 500px;
@@ -18,12 +18,16 @@ html, body {
   @extend .border;
 }
 
-#login-view h2 {
+#special-title {
+  color: #A50B32;
+}
+
+#basic-form h2 {
   padding-top: 15px;
   padding-bottom: 10px;
 }
 
-#login-view h3 {
+#basic-form h3 {
   padding-top: 10px;
   padding-bottom: 10px;
 }
