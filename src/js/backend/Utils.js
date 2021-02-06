@@ -1,3 +1,5 @@
+import {PDFDocument} from "pdf-lib";
+
 export function dataUriToBlob(dataUri) {
     // Check params
     if (!dataUri)
@@ -60,6 +62,37 @@ export function blobToURI(blob) {
     });
 }
 
+/**
+ * Transforms a file into a ArrayBuffer.
+ * @param file The File to be transformed.
+ * @returns {Promise<unknown>} A Promise which resolved the array buffer.
+ */
+export function fileToArrayBuffer(file) {
+    let fileReader = new FileReader();
+    return new Promise((resolve, reject) => {
+        fileReader.onerror = err => reject(err);
+        fileReader.onloadend = () => resolve(fileReader.result);
+        fileReader.readAsArrayBuffer(file);
+    });
+}
+
 export function isImageCaptureSupported() {
     return typeof ImageCapture === 'function'
+}
+
+export function getFormFieldsFromPDF(file) {
+    // let filename = "./Selbstauskunft_Besucher_20201119.pdf";
+    let filename = "file:///F:/workspace/fh-swf/projekt/klinik/Selbstauskunft_Besucher_20201119.pdf";
+    // let formBytes = await fetch(filename).then(res => res.arrayBuffer());
+    // let document = await PDFDocument.load(formBytes);
+    // let form = document.getForm();
+
+    fileToArrayBuffer(file)
+        .then(arrayBuffer => PDFDocument.load(arrayBuffer))
+        .then(form => {
+            console.log("form", form)
+            for(let i=0; i<form.getForm().getFields().length; i++) {
+                console.log("field[" + i + "]:", form.getForm().getFields()[i].getName())
+            }
+        })
 }

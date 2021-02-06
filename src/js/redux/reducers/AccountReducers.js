@@ -62,6 +62,7 @@ export const user = createReducer({
         draft.data.isFetching = true;
     },
     [AccountActions.RECEIVE_USER](draft, action) {
+        console.log("RECEIVE_USER - Guess what, I work")
         draft.data.isFetching = false;
         draft.data.value = action.user;
         draft.data.lastUpdated = action.receivedAt;

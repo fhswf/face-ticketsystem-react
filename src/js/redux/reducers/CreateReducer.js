@@ -16,6 +16,7 @@ import produce from "immer";
 export default function createReducer(initialState, handlers) {
     return (state = initialState, action) => {
         return produce(state, draft => {
+            // console.log("Handlers:", handlers)
             if (handlers.hasOwnProperty(action.type)) {
                 handlers[action.type](draft, action);
                 return draft;

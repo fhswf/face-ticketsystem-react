@@ -7,6 +7,15 @@ const config = {
     backend: {
         endpoint: "http://localhost:3000"
     },
+    i18n: {
+        locale: 'de',
+        time: 'de-DE'
+    },
+    files: {
+        disclosure: {
+            visitor: 'Selbstauskunft_Besucher_20201119.pdf'
+        }
+    },
     storage: {
         root: {
             key: 'root',

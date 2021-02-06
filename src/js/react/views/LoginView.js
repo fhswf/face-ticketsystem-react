@@ -150,10 +150,10 @@ class LoginView extends Component {
     }
 
     render() {
-        return <Container id="login-view">
+        return <Container id="basic-form">
             <Row>
                 <Col>
-                    <Tabs defaultActiveKey='register' id='login-register-tab'>
+                    <Tabs defaultActiveKey='login' id='login-register-tab'>
                         <Tab eventKey='login' title={I18n.t('header.login')}>
                             <h2>{I18n.t('header.login')}</h2>
                             <Form onSubmit={this._login} noValidate validated={this.state.validatedLogin}>

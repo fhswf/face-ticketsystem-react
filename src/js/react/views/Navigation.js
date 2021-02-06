@@ -26,7 +26,7 @@ class Navigation extends Component {
 
     render() {
         return (
-            <Navbar bg="light" variant="pills" className="d-flex rounded">
+            <Navbar bg="light" variant="pills" className="d-flex rounded mb-5">
                 <Navbar.Toggle aria-controls="basic-navbar-nav"/>
                 <Navbar.Collapse id="basic-navbar-nav">
                 <Nav variant="pills" activeKey={this.state.activeLink} onSelect={key => this.setState({activeLink: key})} className="">
@@ -38,6 +38,17 @@ class Navigation extends Component {
                         <Nav.Link onSelect={() => this.props.history.push("/tickets")} eventKey="tickets" className="align-self-center">
                             {I18n.t('nav.tickets')}
                         </Nav.Link>
+                    }
+                    {
+                        (this.props.user.data.loggedIn) &&
+                        <NavDropdown title={I18n.t('nav.disclosures')} id="basic-navbar-nav" className="ml-auto align-self-center">
+                            <NavDropdown.Item onSelect={() => { this.props.history.push("/disclosures") }} eventKey="showDisclosures">
+                                {I18n.t('nav.showDisclosures')}
+                            </NavDropdown.Item>
+                            <NavDropdown.Item onSelect={() => { this.props.history.push("/disclosures/add-visitor") }} eventKey="createDisclosure">
+                                {I18n.t('nav.addVisitorDisclosure')}
+                            </NavDropdown.Item>
+                        </NavDropdown>
                     }
                     {
                         (this.props.user.data.loggedIn) &&

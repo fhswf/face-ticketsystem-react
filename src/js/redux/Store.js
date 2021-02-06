@@ -5,6 +5,7 @@ import reducers from "./reducers/Reducers";
 import {loadTranslations, setLocale, syncTranslationWithStore} from 'react-redux-i18n';
 import translationObject from '../config/i18n';
 import {persistStore} from 'redux-persist'
+import config from "../config/Config";
 
 // Create Redux store, intercepted by the thunk and logger middleware
 const logger = createLogger({});
@@ -17,6 +18,6 @@ const persistor = persistStore(store);
 // i18n
 syncTranslationWithStore(store);
 store.dispatch(loadTranslations(translationObject));
-store.dispatch(setLocale('de'));
+store.dispatch(setLocale(config.i18n.locale));
 
 export {store, persistor};

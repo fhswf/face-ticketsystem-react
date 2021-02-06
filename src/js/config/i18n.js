@@ -6,14 +6,43 @@ const translationObject = {
             account: 'Benutzerkonto',
             showaccount: 'Konto einsehen',
             editaccount: 'Konto bearbeiten',
-            logout: 'Ausloggen'
+            logout: 'Ausloggen',
+            disclosures: 'Selbstauskünfte',
+            showDisclosures: 'Meine Selbstauskünfte anzeigen',
+            addVisitorDisclosure: 'Neue Selbstauskunft für Besucher*innen erstellen'
         },
         header: {
             login: 'Anmelden',
             register: 'Registrieren',
             loginData: 'Anmelde Daten',
             personalData: 'Persönliche Daten',
-            addressData: 'Anschrift'
+            addressData: 'Anschrift',
+            disclosure: {
+                disclosureVisitor: 'Selbstauskunft für Besucher*innen',
+                patient: 'Besuchter Patient',
+                healthComplains: 'Angaben zu möglichen Gesundheitsbeschwerden',
+                symptoms: 'Aktuelle Symptome oder innerhalb der letzten 14 Tage neu aufgetreten',
+                airwaySymptoms: 'Akute Atemwegssymptome',
+                note: 'Hinweis',
+                selfCommitment: 'Selbstverpflichtung',
+                dataPersistence: 'Einverständnis Datenspeicherung'
+            },
+            qr: 'QR-Code'
+        },
+        table: {
+            date: 'Datum',
+            documentType: 'Dokumententyp',
+            details: 'Details',
+            actions: 'Aktionen'
+        },
+        question: {
+            disclosure: {
+                returnRiskarea: 'Reiserückkehrer aus einem Risikogebiet innerhalb der letzten 14 Tage?',
+                quarantine: 'Befinden Sie sich zurzeit in häuslicher Quarantäne?',
+                contactLungs: 'Hatten Sie in den letzten 14 Tagen Kontakt zu Personen mit einer akuten respiratorischen'
+                    + ' Erkrankung (z.B. Bronchitis/Lungenentzündung)?',
+                contactCovid: 'Sind Sie Kontaktperson (KP1) von einem bestätigtem COVID-19-Fall?'
+            }
         },
         message: {
             loginFail: 'Der Nutzername und das Passwort sind nicht korrekt.',
@@ -36,7 +65,14 @@ const translationObject = {
             enterZip: 'Bitte geben Sie Ihre Postleitzahl ein.',
             enterCity: 'Bitte geben Sie die Stadt an, in welcher Sie wohnen.',
             enterAddress1: 'Bitte geben Sie Ihre Anschrift (Straße und Hausnummer) ein.',
-            uploadImage: 'Bitte laden Sie ein Foto von sich hoch.'
+            uploadImage: 'Bitte laden Sie ein Foto von sich hoch.',
+            disclosure: {
+                name: 'Bitte geben Sie den Namen des Patienten an, welchen Sie besuchen möchten.',
+                station: 'Bitte geben Sie an, auf welcher Station sich der Patient befindet.',
+                option: 'Bitte wählen Sie Ja oder Nein aus.',
+                riskarea: 'Bitte geben Sie an, in welchem Risikogebiet Sie sich in den letzten 14 Tagen aufgehalten haben.',
+                riskdate: 'Bitte geben Sie an, an welchem Tag Sie aus dem Risikogebiet zurückgekehrt sind.'
+            }
         },
         data: {
             email: 'E-Mail',
@@ -56,7 +92,26 @@ const translationObject = {
             zipcode: 'PLZ',
             city: 'Stadt',
             address1: 'Adresse',
-            address2: 'Adresszusatz'
+            address2: 'Adresszusatz',
+            yes: 'Ja',
+            no: 'Nein',
+            disclosure: {
+                name: 'Name, Vorname',
+                station: 'Station',
+                cough: 'Husten',
+                musclePain: 'Muskel-/Gelenkschmerzen',
+                fever: 'Fieber',
+                vomit: 'Übelkeit/Erbrechen',
+                throat: 'Halsschmerzen',
+                bellyache: 'Magen-/Darmbeschwerden',
+                headache: 'Kopfschmerzen',
+                taste: 'Geschmacksverlust',
+                smell: 'Geruchsverlust',
+                air: 'Luftnot',
+                breathless: 'Kurzatmigkeit',
+                riskarea: 'Risikogebiet',
+                riskdate: 'Rückkehrdatum'
+            }
         },
         placeholder: {
             email: 'E-Mail Adresse eingeben',
@@ -82,7 +137,38 @@ const translationObject = {
             changeUpload: 'Quelle des Fotos ändern',
             takePhoto: 'Foto aufnehmen',
             retakePhoto: 'Neues Foto aufnehmen',
-            selectVideo: 'Kamera auswählen'
+            selectVideo: 'Kamera auswählen',
+            saveDisclosure: 'Selbstauskunft abschließen',
+            showDetails: 'Details einsehen',
+            generateQR: 'QR-Code erstellen',
+            generatePDF: 'PDF-Datei erstellen',
+            download: 'Download'
+        },
+        information: {
+            disclosure: {
+                greetingVisitor: 'Sehr geehrte Besucherinnen und Besucher,',
+                introduction: 'zu Ihrem eigenen Schutz sowie, dem Schutz von Patienten und Klinikmitarbeitern möchten '
+                    + 'wir Sie bitten, folgende Angaben zu machen bzw. Fragen zu beantworten. Bitte bringen Sie den '
+                    + 'QR-Code oder ausgedruckten und ausgefüllten Fragebogen unterschrieben zu Ihrem Patientenbesuch '
+                    + 'mit. Vielen Dank vorab dafür.',
+                quarantine: 'Sollten Sie sich zurzeit in häuslicher Qurantäne befinden, möchten wir Sie bitten, sich '
+                    + 'vorab mit der behandelnden Fachabteilung telefonisch in Verbindung zu setzen.',
+                noAccess: 'Sollten Sie eine dieser Fragen mit „Ja“ beantworten, bitten wir um Verständnis, dass ein ' +
+                    'Besuch dann leider nicht möglich ist.',
+                selfCommitment: 'Als Besucher verpflichte ich mich, mich ausschließlich beim benannten Patienten und ' +
+                    'in dessen Zimmer aufzuhalten, während des gesamten Besuchs einen Mund-Nasen-Schutz zu tragen und ' +
+                    'einen Mindestabstand von 1,5 m zu wahren. Die geltenden Hygienerichtlinien wurden mir mitgeteilt. ' +
+                    'Ich verpflichte mich, diese einzuhalten.',
+                dataPersistence1: 'Ich bin damit einverstanden, dass die von mir erhobenen Daten gespeichert werden. ' +
+                    'Die Angaben sind gem. der "Coronaschutzverordnung-NRW" freiwillig, aber ohne Angabe dürfen wir ' +
+                    'Ihnen keinen Zugang gewähren.',
+                dataPersistence2: 'Sie haben jederzeit die Möglichkeit, Ihre Einwilligung in die Speicherung ganz oder ' +
+                    'in Teilen ohne Angabe von Gründen zu widerrufen. Diese Widerrufserklärung ist an die Märkische ' +
+                    'Kliniken GmbH zu richten. Ihr Widerruf gilt allerdings erst ab dem Zeitpunkt, zu dem Sie diesen ' +
+                    'aussprechen. Er hat keine Rückwirkung. Die Verarbeitung Ihrer Daten bis zu diesem Zeitpunkt bleibt ' +
+                    'rechtmäßig. Sie wurden auf den Aushang zu den "Informationspflichten bezüglich der Erhebung von ' +
+                    'Daten von Besuchern bzw. Kontaktpersonen von Patienten" hingewiesen.'
+            }
         }
     }
 };
