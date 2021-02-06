@@ -68,7 +68,7 @@ export function fillVisitorDisclosurePDF(disclosure, visitor) {
 
             // Save the filled out PDF and let the user download it
             pdfDoc.save().then(pdfBytes => {
-                download(pdfBytes, "Selbstauskunft Besucher.pdf", "application/pdf");
+                download(pdfBytes, disclosure._id + ".pdf", "application/pdf");
             })
         })
 }

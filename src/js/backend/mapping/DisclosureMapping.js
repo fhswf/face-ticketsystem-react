@@ -80,13 +80,3 @@ export const visitorField2PdfField = {
     signatureVisitor: 'Datum  Unterschrift Besucherin',
     signatureInstitue: 'Datum  Unterschrift Einrichtung'
 };
-
-
-/**
- * Given a field from 'Selbstauskunft_Besucher_20201119.pdf', the corresponding visitorDisclosure (redux state) will be
- * determined.
- * @type {{}}
- */
-export const visitorDisclosurePdfField2ReducerField = {
-
-};
