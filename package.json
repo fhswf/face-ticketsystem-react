@@ -13,6 +13,7 @@
     "cookies-js": "1.2.3",
     "dotenv": "8.2.0",
     "downloadjs": "1.4.7",
+    "face-api.js": "0.22.2",
     "immer": "7.0.14",
     "lodash": "4.17.20",
     "pdf-lib": "1.15.0",
@@ -23,6 +24,7 @@
     "react-dom": "17.0.1",
     "react-dropzone": "11.2.4",
     "react-easy-crop": "3.3.1",
+    "react-flagkit": "2.0.4",
     "react-redux": "7.2.2",
     "react-redux-i18n": "1.9.3",
     "react-router-dom": "5.2.0",
@@ -37,7 +39,7 @@
     "web-vitals": "0.2.4"
   },
   "scripts": {
-    "start": "webpack-dev-server --open --mode development",
+    "start": "webpack-dev-server --open --mode development --host 0.0.0.0",
     "build": "webpack --mode production",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

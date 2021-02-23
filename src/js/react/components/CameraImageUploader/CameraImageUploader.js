@@ -1,5 +1,4 @@
 import './CameraImageUploader.css';
-// import 'react-html5-camera-photo/build/css/index.css';
 
 import React, {Component} from 'react';
 import {Container, Row, Col, Button, Card} from "react-bootstrap";
@@ -10,10 +9,13 @@ import {createCanvas} from 'canvas';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faCamera, faFileUpload, faChevronLeft} from "@fortawesome/free-solid-svg-icons";
 import {I18n} from 'react-redux-i18n';
-import {dataUriToBlob} from '../../../backend/Utils';
+import {dataUriToBlob, hasImageOnlyOneFace, createImageFromDataURL} from '../../../backend/Utils';
 import CameraSelector from "./CameraSelector";
 
-
+/**
+ * The sub Components which can be rendered.
+ * @type {{captureSelection: string, imageUpload: string, camera: string, imagePreview: string}}
+ */
 const components = {
     captureSelection: 'captureSelection',
     imageUpload: 'imageUpload',
@@ -27,6 +29,7 @@ class CameraImageUploader extends Component {
         this._handleAcceptDrop = this._handleAcceptDrop.bind(this);
         this._cropImage = this._cropImage.bind(this);
         this._changeView = this._changeView.bind(this);
+        this.cropperRef = React.createRef();
         this.state = {
             activeComponent: components.captureSelection,
             prevComponent: components.captureSelection,
@@ -41,10 +44,19 @@ class CameraImageUploader extends Component {
             croppedImage: null,
             croppedAreaPixels: null,
             zoom: 1,
-            aspectRatio: 1
+            aspectRatio: 1,
+            imageSize: {
+                width: 0,
+                height: 0
+            }
         };
     }
 
+    /**
+     * Change the Component to de displayed.
+     * @param destiny The new Component to be rendered.
+     * @private
+     */
     _changeView(destiny) {
         this.setState({
             prevComponent: this.state.activeComponent,
@@ -70,7 +82,7 @@ class CameraImageUploader extends Component {
 
     /**
      * Handle selecting an image to upload.
-     * @param files The selected files to be uploaded.
+     * @param files The selectedCountry files to be uploaded.
      * @private
      */
     _handleAcceptDrop(files) {
@@ -81,33 +93,39 @@ class CameraImageUploader extends Component {
         let fileReader = new FileReader();
         let file = files[0];
         fileReader.onloadend = () => {
-            this.setState({
-                file: file,
-                filePreviewURL: fileReader.result,
-                isFileRejected: false,
-                prevComponent: this.state.activeComponent,
-                activeComponent: components.imagePreview
-            });
+            createImageFromDataURL(fileReader.result)
+                .then(image => {
+                    this.setState({
+                        file: file,
+                        filePreviewURL: fileReader.result,
+                        isFileRejected: false,
+                        prevComponent: this.state.activeComponent,
+                        activeComponent: components.imagePreview,
+                        aspectRatio: image.width / image.height,
+                        imageSize: {
+                            width: image.width,
+                            height: image.height
+                        }
+                    });
+                });
         };
         fileReader.readAsDataURL(file);
 
         if (this.props.hasOwnProperty('onPictureSelected')) {
             this.props.onPictureSelected(file);
         }
+        if (this.props.hasOwnProperty('onPictureEvaluated')) {
+            hasImageOnlyOneFace(file).then(hasFace => this.props.onPictureEvaluated(hasFace));
+        }
     }
 
-    _createImage(url) {
-        return new Promise((resolve, reject) => {
-            const image = new Image();
-            image.addEventListener('load', () => resolve(image));
-            image.addEventListener('error', err => reject(err));
-            image.setAttribute('crossOrigin', 'anonymous');
-            image.src = url;
-        });
-    }
-
+    /**
+     * Crops the current image.
+     * @param croppedAreaPixels The area to be cropped, containing an X/Y-Offset und a height and width.
+     * @private
+     */
     _cropImage(croppedAreaPixels) {
-        this._createImage(this.state.filePreviewURL).then(image => {
+        createImageFromDataURL(this.state.filePreviewURL).then(image => {
             let canvas = createCanvas(croppedAreaPixels.width, croppedAreaPixels.height);
             let ctx = canvas.getContext('2d');
             ctx.drawImage(
@@ -131,6 +149,9 @@ class CameraImageUploader extends Component {
             if (this.props.hasOwnProperty('onPictureSelected')) {
                 this.props.onPictureSelected(dataBlob);
             }
+            if (this.props.hasOwnProperty('onPictureEvaluated')) {
+                hasImageOnlyOneFace(dataBlob).then(hasFace => this.props.onPictureEvaluated(hasFace));
+            }
         });
     }
 
@@ -139,7 +160,6 @@ class CameraImageUploader extends Component {
      * @returns {*} The React Component to be rendered.
      */
     render() {
-        // TODO show message, that camera needs to be changed in: chrome://settings/content/camera
         return <>
             {
                 this.state.activeComponent === components.captureSelection &&
@@ -222,21 +242,35 @@ class CameraImageUploader extends Component {
                 this.state.activeComponent === components.imagePreview &&
                 <Container>
                     <Row>
-                        <div className="cropContainer" style={{aspectRatio: this.state.aspectRatio}}>
+                        <div className="imageContainer" style={{aspectRatio: this.state.aspectRatio}}>
                             {/*<Image fluid src={this.state.filePreviewURL}/>*/}
                             <Cropper image={this.state.filePreviewURL}
                                      crop={this.state.crop}
                                      zoom={this.state.zoom}
                                      aspect={1}
+                                     ref={this.cropperRef}
                                      onCropChange={crop => this.setState({crop: crop})}
                                      onZoomChange={zoom => this.setState({zoom: zoom})}
                                      onCropComplete={(croppedArea, croppedAreaPixels) => {
                                          this._cropImage(croppedAreaPixels);
                                      }}
                                      classes={{
-                                         containerClassName: "cropContainer",
-                                         mediaClassName: "cropMedia",
-                                         cropAreaClassName: "cropArea"
+                                         // containerClassName: "cropContainer",
+                                         // mediaClassName: "cropMedia",
+                                         // cropAreaClassName: "cropArea"
+                                     }}
+                                     style={{
+                                         containerStyle: {
+                                             width: this.state.imageSize.width,
+                                             height: this.state.imageSize.height,
+                                             maxHeight:
+                                                 this.cropperRef && this.cropperRef.current && this.cropperRef.current.style
+                                                 ? this.cropperRef.current.style.cropAreaStyle.height
+                                                 : '100%',
+                                             maxWidth: '100%',
+                                             paddingBottom: '100%',
+                                             // position: 'relative'
+                                         }
                                      }}
                             />
                         </div>
@@ -275,6 +309,7 @@ class CameraImageUploader extends Component {
 
 CameraImageUploader.propTypes = {
     onPictureSelected: PropTypes.func,  // Is called when capturing an image - Param: file
+    onPictureEvaluated: PropTypes.func, // Is called after face-api.js evaluated the image - Param: hasFace
     isUploading: PropTypes.bool,        // If true, the Upload-Button will be disabled
     placeholder: PropTypes.string       // The message to be displayed within the upload text
 };

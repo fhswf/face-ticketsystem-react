@@ -1,5 +1,11 @@
 import {PDFDocument} from "pdf-lib";
+import * as faceapi from 'face-api.js';
 
+/**
+ * Creates a Blob object using a Data URL.
+ * @param dataUri The Data URL to be transformed into a Blob.
+ * @returns {Blob|*} The Blob representing the file.
+ */
 export function dataUriToBlob(dataUri) {
     // Check params
     if (!dataUri)
@@ -76,23 +82,62 @@ export function fileToArrayBuffer(file) {
     });
 }
 
+/**
+ * Determine whether or not the Browser Support the ImageCapture API.
+ * @returns {boolean} True, if the Browser support the ImageCapture API, otherwise false.
+ */
 export function isImageCaptureSupported() {
     return typeof ImageCapture === 'function'
 }
 
+/**
+ * Determine the form field of a PDF Document and creates a console log containing these field informations.
+ * @param file The PDF File object.
+ * @returns {Promise<PDFField[]>}
+ */
 export function getFormFieldsFromPDF(file) {
-    // let filename = "./Selbstauskunft_Besucher_20201119.pdf";
-    let filename = "file:///F:/workspace/fh-swf/projekt/klinik/Selbstauskunft_Besucher_20201119.pdf";
-    // let formBytes = await fetch(filename).then(res => res.arrayBuffer());
-    // let document = await PDFDocument.load(formBytes);
-    // let form = document.getForm();
-
-    fileToArrayBuffer(file)
+    return fileToArrayBuffer(file)
         .then(arrayBuffer => PDFDocument.load(arrayBuffer))
         .then(form => {
-            console.log("form", form)
-            for(let i=0; i<form.getForm().getFields().length; i++) {
+            console.info("form", form);
+            for (let i = 0; i < form.getForm().getFields().length; i++) {
                 console.log("field[" + i + "]:", form.getForm().getFields()[i].getName())
             }
+            return form.getForm().getFields();
         })
+}
+
+/**
+ * Create a new <image> object using a DataURL.
+ * @param url The DataURL of the image to be created.
+ * @returns {Promise<unknown>} On success, resolves the Image object, rejects the error otherwise.
+ */
+export function createImageFromDataURL(url) {
+    return new Promise((resolve, reject) => {
+        const image = new Image();
+        image.addEventListener('load', () => resolve(image));
+        image.addEventListener('error', err => reject(err));
+        image.setAttribute('crossOrigin', 'anonymous');
+        image.src = url;
+    });
+}
+
+/**
+ * Determines whether or not one face is within the given image file using face-api js.
+ * @param file The image as a file.
+ * @returns {Promise<boolean>} A Promise resolving true if there is only 1 face in the image.
+ * Resolves false if there are 0 or more than 1 faces in the image. Otherwise rejects with errors.
+ */
+export function hasImageOnlyOneFace(file) {
+    return new Promise((resolve, reject) => {
+        faceapi.bufferToImage(file)
+            .then(image => {
+                faceapi.detectAllFaces(image)
+                    .then(faces => {
+                        resolve(faces.length === 1);
+                    })
+                    .catch(err => reject(err));
+            })
+            .catch(err => reject(err));
+    });
 }
