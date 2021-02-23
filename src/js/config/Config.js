@@ -5,7 +5,8 @@ import Cookies from 'cookies-js';
 
 const config = {
     backend: {
-        endpoint: "https://jupiter.fh-swf.de/fts-api"
+        //endpoint: "https://jupiter.fh-swf.de/fts-api"
+        endpoint: "http://127.0.0.1:12000"
     },
     i18n: {
         locale: 'de',

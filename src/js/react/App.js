@@ -26,8 +26,8 @@ class App extends Component {
     }
 
     render() {
-        // return <BrowserRouter id='browser-router' basename={process.env.ASSET_PATH}>
-        return <BrowserRouter id='browser-router'>
+        // return <BrowserRouter id='browser-router'>
+        return <BrowserRouter id='browser-router' basename={process.env.ASSET_PATH}>
             <Navigation/>
             <main>
                 <Switch>
