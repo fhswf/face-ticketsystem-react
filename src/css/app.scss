@@ -31,3 +31,8 @@ html, body {
   padding-top: 10px;
   padding-bottom: 10px;
 }
+
+#scrollable-dropdown {
+  height: 230px;
+  overflow-y: scroll;
+}
