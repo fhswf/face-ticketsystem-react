@@ -3,18 +3,22 @@ import {ActionCreators} from "../../redux/actions/ActionCreators";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import {I18n} from 'react-redux-i18n';
-import {Container, Tab, Tabs, Row, Col, Form, Button, Dropdown, DropdownButton, Alert} from 'react-bootstrap';
+import {Container, Tab, Tabs, Row, Col, Form, Button, Dropdown, DropdownButton, Alert, Spinner} from 'react-bootstrap';
 import {withRouter} from "react-router-dom";
 import {emptyUser} from "../../redux/reducers/AccountReducers";
 import PropTypes from "prop-types";
 import produce from "immer";
 import _ from 'lodash';
 import CameraImageUploader from "../components/CameraImageUploader/CameraImageUploader";
+import SimpleDialog from "../components/SimpleDialog";
 
 const PASSWORD_MIN_LENGTH = 6;
 const MIN_PHONE_LENGTH = 6;
-const ZIP_LENGTH = 3;
+const ZIP_LENGTH_MIN = 3;
 
+/**
+ * The high order Component representing the login view.
+ */
 class LoginView extends Component {
     constructor(props) {
         super(props);
@@ -29,6 +33,7 @@ class LoginView extends Component {
         this._getSalutationDropdownTitle = this._getSalutationDropdownTitle.bind(this);
         this._isPasswordValid = this._isPasswordValid.bind(this);
         this._isRepeatedPasswordValid = this._isRepeatedPasswordValid.bind(this);
+        this._onPictureEvaluated = this._onPictureEvaluated.bind(this);
         this.state = {
             user: emptyUser,
             repeatedPassword: '',
@@ -37,10 +42,18 @@ class LoginView extends Component {
             pictureToUpload: null,
             isEmailOccupied: false,
             didLoginFail: false,
-            loginErrorMessage: 'message.loginFail'
+            loginErrorMessage: 'message.loginFail',
+            registerFailed: false,
+            isTryingToRegister: false,
+            pictureHasFace: undefined
         };
     }
 
+    /**
+     * Try to log the user in.
+     * @param event The form event which resolves into logging in an user.
+     * @private
+     */
     _login(event) {
         const form = event.currentTarget;
         event.preventDefault(); // DO NOT DELETE - Fixes the bug, where fetch would get canceled
@@ -63,6 +76,11 @@ class LoginView extends Component {
         }
     }
 
+    /**
+     * Try to register the user in.
+     * @param event The form event which resolves into registering an user.
+     * @private
+     */
     _register(event) {
         const form = event.currentTarget;
         event.preventDefault(); // DO NOT DELETE - Fixes the bug, where fetch would get canceled
@@ -72,24 +90,48 @@ class LoginView extends Component {
             this.setState({validatedRegister: true});
         }
         else {
+            this.setState({
+                isTryingToRegister: true
+            });
+
             this.props.register(this.state.user, this.state.pictureToUpload)
                 .then(user => {
                     this.props.history.push('/home');
                 })
                 .catch(err => {
-                    // TODO Handle fetch error
+                    this.setState({
+                        registerFailed: true,
+                        isTryingToRegister: false
+                    })
                 });
         }
     }
 
-    _handleChange(property) {
+    /**
+     * Handle a state change.
+     * @param property The state property to be updated.
+     * @param isNumeric If true, only allow numeric inputs. Default is false.
+     * @return function A function expecting an event as a parameter, which contains the new value for the property.
+     * @private
+     */
+    _handleChange(property, isNumeric=false) {
         return (event) => {
+            let value = event.target.value;
+            if (isNumeric) {
+                value = value.replace(/[^\d+|]*/g, '');
+            }
             this.setState(produce(this.state, draft => {
-                _.set(draft, property, event.target.value);
+                draft.didLoginFail = false; // Resets the login failure message
+                _.set(draft, property, value);
             }))
         }
     }
 
+    /**
+     * Handle the change of an E-Mail, by checking if the E-Mail is occupied or not.
+     * @param event The change event containing the new email value.
+     * @private
+     */
     _handleNewEmailChange(event) {
         // Note: Yes, the state will be updated twice (double update of GUI) which is necessary, otherwise the E-Mail
         // Control won't get updated properly (the text won't change for an unknown reason)
@@ -105,19 +147,37 @@ class LoginView extends Component {
             })
     }
 
+    /**
+     * Determine whether or not the E-Mail is valid.
+     * @return boolean True, if the E-Mail has a valid format, otherwise false.
+     * @private
+     */
     _isEmailValid() {
         let emailPattern = /\S+@\S+\.\S+/;
         return this.state.user.email && !this.state.isEmailOccupied && emailPattern.test(this.state.user.email);
     }
 
-    _handleDropdown(property) {
+    /**
+     * Handle a dropdown event.
+     * @param properties The properties to be updated.
+     * @return function A function expecting the eventKey containing the value (and the dropdown event (unused)).
+     * @private
+     */
+    _handleDropdown(...properties) {
         return (eventKey, event) => {
             this.setState(produce(draft => {
-                _.set(draft, property, eventKey);
+                for (let i = 0; i < properties.length; i++) {
+                    _.set(draft, properties[i], eventKey);
+                }
             }))
         }
     }
 
+    /**
+     * Get the Text for the Dropdown to display the currently selected salutation or it's placeholder.
+     * @return string The text to be displayed.
+     * @private
+     */
     _getSalutationDropdownTitle() {
         if (!this.state.user.personal.salutation) {
             return I18n.t('placeholder.salutation');
@@ -125,21 +185,41 @@ class LoginView extends Component {
         return this.state.user.personal.salutation;
     }
 
+    /**
+     * @return boolean True, if the typed in password is valid; otherwise false.
+     * @private
+     */
     _isPasswordValid() {
         return this.state.user.password && this.state.user.password.length >= PASSWORD_MIN_LENGTH;
     }
 
+    /**
+     * @return boolean True, if the typed in repeated password is valid; otherwise false.
+     * @private
+     */
     _isRepeatedPasswordValid() {
         return this.state.repeatedPassword && this.state.repeatedPassword === this.state.user.password;
     }
 
+    /**
+     * Determine Whether or not the typed in value is a name.
+     * @param name A String which represents the name of a person.
+     * @return boolean True, if the typed in name is valid; otherwise false.
+     * @private
+     */
     _isNameValid(name) {
         // let pattern = /[A-Z][a-z]+( [A-Z][a-z]+)*/;
         let pattern = /[a-z]+( [a-z]+)*/;
         return name && pattern.test(name);
     }
 
-    _isFieldValid(field, length) {
+    /**
+     * Determines whether or not a given field is valid.
+     * @param field The field to be checked.
+     * @param length The minimum length of the field. Default is 1.
+     * @return boolean True, if the field is valid; otherwise false.
+     */
+    _isFieldValid(field, length = 1) {
         return field && field.length >= length;
     }
 
@@ -149,10 +229,24 @@ class LoginView extends Component {
         });
     }
 
+    _onPictureEvaluated(hasFace) {
+        this.setState({
+            pictureHasFace: hasFace
+        });
+    }
+
     render() {
+        let self = this;
         return <Container id="basic-form">
             <Row>
                 <Col>
+                    <SimpleDialog show={this.state.registerFailed}
+                                  handleClose={() => {
+                                      self.setState({registerFailed: false})
+                                  }}
+                                  title={I18n.t('message.registerFailTitle')}
+                                  text={I18n.t('message.registerFailText')}
+                    />
                     <Tabs defaultActiveKey='login' id='login-register-tab'>
                         <Tab eventKey='login' title={I18n.t('header.login')}>
                             <h2>{I18n.t('header.login')}</h2>
@@ -162,7 +256,6 @@ class LoginView extends Component {
                                     <Col sm="9">
                                         <Form.Control type="email" placeholder={I18n.t('placeholder.email')}
                                                       onChange={e => {
-                                                          this.setState({didLoginFail: false});
                                                           this._handleChange('user.email')(e);
                                                       }}
                                                       value={this.state.user.email} required/>
@@ -176,7 +269,6 @@ class LoginView extends Component {
                                     <Col sm="9">
                                         <Form.Control type="password" placeholder={I18n.t('placeholder.password')}
                                                       onChange={e => {
-                                                          this.setState({didLoginFail: false});
                                                           this._handleChange('user.password')(e);
                                                       }}
                                                       value={this.state.user.password} required/>
@@ -192,7 +284,7 @@ class LoginView extends Component {
                                     </Col>
                                 </Form.Group>
                                 <Button variant="primary" type="submit">
-                                    {I18n.t('header.login')}
+                                    {I18n.t('controls.login')}
                                 </Button>
                             </Form>
                         </Tab>
@@ -312,15 +404,15 @@ class LoginView extends Component {
                                 <Form.Group controlId="phoneFormRegister" as={Row}>
                                     <Form.Label column sm="4">{I18n.t('data.phone')}:</Form.Label>
                                     <Col>
-                                        <Form.Control type="text"
+                                        <Form.Control type="text" required
                                                       placeholder={I18n.t('placeholder.phone')}
-                                                      isValid={this._isFieldValid(this.state.user.personal.phone, MIN_PHONE_LENGTH)}
+                                                      isValid={this._isFieldValid(this.state.user.personal.phonenumber, MIN_PHONE_LENGTH)}
                                                       isInvalid={
-                                                          (this.state.validatedRegister || this.state.user.personal.phone)
-                                                          && !this._isFieldValid(this.state.user.personal.phone, MIN_PHONE_LENGTH)
+                                                          (this.state.validatedRegister || this.state.user.personal.phonenumber)
+                                                          && !this._isFieldValid(this.state.user.personal.phonenumber, MIN_PHONE_LENGTH)
                                                       }
-                                                      onChange={this._handleChange('user.personal.phone')}
-                                                      value={this.state.user.personal.phone}/>
+                                                      onChange={this._handleChange('user.personal.phonenumber', true)}
+                                                      value={this.state.user.personal.phonenumber}/>
                                         <Form.Control.Feedback type="invalid">
                                             {I18n.t('feedback.enterPhone')}
                                         </Form.Control.Feedback>
@@ -332,10 +424,26 @@ class LoginView extends Component {
                                         <CameraImageUploader isUploading={false}
                                                              placeholder={I18n.t('placeholder.picture')}
                                                              onPictureSelected={this._onPictureTaken}
+                                                             onPictureEvaluated={this._onPictureEvaluated}
                                         />
-                                        <Form.Control.Feedback type="invalid">
-                                            {I18n.t('feedback.uploadImage')}
-                                        </Form.Control.Feedback>
+                                        {
+                                            this.state.pictureHasFace === false &&
+                                            <Alert variant="danger" className="mt-2 mb-0">
+                                                {I18n.t('feedback.noFaceFound')}
+                                            </Alert>
+                                        }
+                                        {
+                                            this.state.pictureHasFace === undefined && !this.state.validatedRegister &&
+                                            <Alert variant="info" className="mt-2 mb-0">
+                                                {I18n.t('information.imageProcessing')}
+                                            </Alert>
+                                        }
+                                        {
+                                            this.state.pictureHasFace === undefined && this.state.validatedRegister &&
+                                            <Alert variant="danger" className="mt-2 mb-0">
+                                                {I18n.t('feedback.uploadImage')}
+                                            </Alert>
+                                        }
                                     </Col>
                                 </Form.Group>
 
@@ -353,14 +461,14 @@ class LoginView extends Component {
                                 <Form.Group controlId="zipFormRegister" as={Row}>
                                     <Form.Label column sm="4">{I18n.t('data.zipcode')}:</Form.Label>
                                     <Col>
-                                        <Form.Control type="text"
+                                        <Form.Control type="text" required
                                                       placeholder={I18n.t('placeholder.zipcode')}
-                                                      isValid={this._isFieldValid(this.state.user.personal.zipcode, ZIP_LENGTH)}
+                                                      isValid={this._isFieldValid(this.state.user.personal.zipcode, ZIP_LENGTH_MIN)}
                                                       isInvalid={
                                                           (this.state.validatedRegister || this.state.user.personal.zipcode)
-                                                          && !this._isFieldValid(this.state.user.personal.zipcode, ZIP_LENGTH)
+                                                          && !this._isFieldValid(this.state.user.personal.zipcode, ZIP_LENGTH_MIN)
                                                       }
-                                                      onChange={this._handleChange('user.personal.zipcode')}
+                                                      onChange={this._handleChange('user.personal.zipcode', true)}
                                                       value={this.state.user.personal.zipcode}/>
                                         <Form.Control.Feedback type="invalid">
                                             {I18n.t('feedback.enterZip')}
@@ -370,7 +478,7 @@ class LoginView extends Component {
                                 <Form.Group controlId="cityFormRegister" as={Row}>
                                     <Form.Label column sm="4">{I18n.t('data.city')}:</Form.Label>
                                     <Col>
-                                        <Form.Control type="text"
+                                        <Form.Control type="text" required
                                                       placeholder={I18n.t('placeholder.city')}
                                                       isValid={this._isFieldValid(this.state.user.personal.city, 1)}
                                                       isInvalid={
@@ -387,11 +495,11 @@ class LoginView extends Component {
                                 <Form.Group controlId="address1FormRegister" as={Row}>
                                     <Form.Label column sm="4">{I18n.t('data.address1')}:</Form.Label>
                                     <Col>
-                                        <Form.Control type="text"
+                                        <Form.Control type="text" required
                                                       placeholder={I18n.t('placeholder.address1')}
                                                       isValid={this._isFieldValid(this.state.user.personal.address1, 1)}
                                                       isInvalid={
-                                                          (this.state.validatedRegister || this.state.user.personal.city)
+                                                          (this.state.validatedRegister || this.state.user.personal.address1)
                                                           && !this._isFieldValid(this.state.user.personal.address1, 1)
                                                       }
                                                       onChange={this._handleChange('user.personal.address1')}
@@ -410,8 +518,18 @@ class LoginView extends Component {
                                                       value={this.state.user.personal.address2}/>
                                     </Col>
                                 </Form.Group>
-                                <Button variant="primary" type="submit">
-                                    {I18n.t('header.register')}
+                                <Button variant="primary" type="submit" disabled={this.state.isTryingToRegister}>
+                                    {
+                                        this.state.isTryingToRegister &&
+                                        <span>
+                                            <Spinner as="span" animation="border" size="sm" />
+                                            {I18n.t('controls.registering')}
+                                        </span>
+                                    }
+                                    {
+                                        !this.state.isTryingToRegister &&
+                                        I18n.t('controls.register')
+                                    }
                                 </Button>
                             </Form>
                         </Tab>
