@@ -27,7 +27,12 @@ const translationObject = {
                 selfCommitment: 'Selbstverpflichtung',
                 dataPersistence: 'Einverständnis Datenspeicherung'
             },
-            qr: 'QR-Code'
+            qr: 'QR-Code',
+            ticket: {
+                create: 'Neues Ticket anlegen',
+                details: 'Ticket-Details',
+                custom: 'Benutzerdefinierte Felder'
+            }
         },
         table: {
             date: 'Datum',
@@ -47,7 +52,9 @@ const translationObject = {
         message: {
             loginFail: 'Der Nutzername und das Passwort sind nicht korrekt.',
             loginFetchError: 'Beim Übertragen der Login-Daten ist etwas schief gelaufen.',
-            logoutFail: 'Fehler beim Ausloggen'
+            logoutFail: 'Fehler beim Ausloggen',
+            registerFailTitle: 'Registrierung fehlgeschlagen',
+            registerFailText: 'Ihr Account konnte nicht erstellt werden.'
         },
         feedback: {
             enterEmailLogin: 'Bitte geben Sie Ihre E-Mail Adresse ein.',
@@ -66,12 +73,22 @@ const translationObject = {
             enterCity: 'Bitte geben Sie die Stadt an, in welcher Sie wohnen.',
             enterAddress1: 'Bitte geben Sie Ihre Anschrift (Straße und Hausnummer) ein.',
             uploadImage: 'Bitte laden Sie ein Foto von sich hoch.',
+            noFaceFound: 'Auf dem ausgewählten Bereich ist kein Gesicht zu erkennen.',
             disclosure: {
                 name: 'Bitte geben Sie den Namen des Patienten an, welchen Sie besuchen möchten.',
                 station: 'Bitte geben Sie an, auf welcher Station sich der Patient befindet.',
                 option: 'Bitte wählen Sie Ja oder Nein aus.',
                 riskarea: 'Bitte geben Sie an, in welchem Risikogebiet Sie sich in den letzten 14 Tagen aufgehalten haben.',
                 riskdate: 'Bitte geben Sie an, an welchem Tag Sie aus dem Risikogebiet zurückgekehrt sind.'
+            },
+            ticket: {
+                name: 'Bitte geben Sie die Bezeichnung des Tickets ein.',
+                price: {
+                    value: 'Bitte geben Sie den Preis (Centbetrag) des Tickets ein.',
+                    currency: 'Bitte wählen Sie die Währung des Ticketpreises aus.'
+                },
+                status: 'Bitte wählen Sie den Status des Tickets aus.',
+                buyLimit: 'Bitte geben Sie das Kauflimit der Tickets ein. Wählen Sie 0 wenn es kein Kauflimit für Tickets geben soll.'
             }
         },
         data: {
@@ -111,6 +128,13 @@ const translationObject = {
                 breathless: 'Kurzatmigkeit',
                 riskarea: 'Risikogebiet',
                 riskdate: 'Rückkehrdatum'
+            },
+            ticket: {
+                name: 'Ticketbezeichnung',
+                price: {
+                    value: 'Preis in Cent',
+                    currency: 'Währung'
+                }
             }
         },
         placeholder: {
@@ -129,6 +153,9 @@ const translationObject = {
             address2: 'Adresszusatz eingeben (Stockwerk, etc.)'
         },
         controls: {
+            login: 'Einloggen',
+            register: 'Registrieren',
+            registering: 'Wird registriert...',
             camera: 'Kamera',
             upload: 'Foto hochladen',
             back: 'Zurürck',
@@ -142,9 +169,13 @@ const translationObject = {
             showDetails: 'Details einsehen',
             generateQR: 'QR-Code erstellen',
             generatePDF: 'PDF-Datei erstellen',
-            download: 'Download'
+            download: 'Download',
+            ok: 'Ok',
+            close: 'Schließen'
         },
         information: {
+            imageProcessing: 'Aufgrund des Ladens der Gesichtserkennung kann das erstmalige Hochladen eines Bildes '
+                + 'evtl. etwas Zeit in Anspruch nehmen.',
             disclosure: {
                 greetingVisitor: 'Sehr geehrte Besucherinnen und Besucher,',
                 introduction: 'zu Ihrem eigenen Schutz sowie, dem Schutz von Patienten und Klinikmitarbeitern möchten '
