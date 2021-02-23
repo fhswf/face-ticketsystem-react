@@ -10,6 +10,7 @@ export const emptyUser = {
         firstname: '',
         lastname: '',
         salutation: '',
+        sex: 1, // from MIPS. 1 for male and 0 for female
         phonenumber: '',
         country: '',
         zipcode: '',
@@ -50,7 +51,7 @@ export const user = createReducer({
         error: null,
         loggedIn: false
     },
-    tickets: {
+    purchasedTickets: {
         isFetching: false,
         values: [],
         lastUpdated: undefined,
@@ -62,7 +63,6 @@ export const user = createReducer({
         draft.data.isFetching = true;
     },
     [AccountActions.RECEIVE_USER](draft, action) {
-        console.log("RECEIVE_USER - Guess what, I work")
         draft.data.isFetching = false;
         draft.data.value = action.user;
         draft.data.lastUpdated = action.receivedAt;
