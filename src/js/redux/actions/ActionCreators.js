@@ -6,7 +6,8 @@ import {
     logout,
     receiveEmailOccupied,
     requestEmailOccupied,
-    isEmailOccupied
+    isEmailOccupied,
+    updateUser
 } from './AccountActions';
 import {
     requestVisitorDisclosure,
@@ -30,6 +31,7 @@ import {
 export const ActionCreators = Object.assign({},
     {
         login, register, receiveUser, requestUser, logout, requestEmailOccupied, receiveEmailOccupied, isEmailOccupied,
+        updateUser,
         requestVisitorDisclosure, receiveVisitorDisclosure, createVisitorDisclosure, setVisitorDisclosure,
         updateVisitorDisclosureField,
         requestVisitorDisclosures, receiveVisitorDisclosures, fetchVisitorDisclosures,

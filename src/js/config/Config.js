@@ -6,7 +6,7 @@ import Cookies from 'cookies-js';
 const config = {
     backend: {
         //endpoint: "https://jupiter.fh-swf.de/fts-api"
-        endpoint: "http://127.0.0.1:12000"
+        endpoint: "http://localhost:12000"
     },
     i18n: {
         locale: 'de',
@@ -15,6 +15,20 @@ const config = {
     files: {
         disclosure: {
             visitor: 'Selbstauskunft_Besucher_20201119.pdf'
+        }
+    },
+    controls: {
+        user: {
+            password: {
+                min: 6
+            },
+            phone: {
+                min: 6
+            },
+            zip: {
+                min: 3,
+                max: 5
+            }
         }
     },
     storage: {

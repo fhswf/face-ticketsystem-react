@@ -17,6 +17,7 @@ const translationObject = {
             loginData: 'Anmelde Daten',
             personalData: 'Persönliche Daten',
             addressData: 'Anschrift',
+            updateUser: 'Account bearbeiten',
             disclosure: {
                 disclosureVisitor: 'Selbstauskunft für Besucher*innen',
                 patient: 'Besuchter Patient',
@@ -54,7 +55,8 @@ const translationObject = {
             loginFetchError: 'Beim Übertragen der Login-Daten ist etwas schief gelaufen.',
             logoutFail: 'Fehler beim Ausloggen',
             registerFailTitle: 'Registrierung fehlgeschlagen',
-            registerFailText: 'Ihr Account konnte nicht erstellt werden.'
+            registerFailText: 'Ihr Account konnte nicht erstellt werden.',
+            updateAccountFail: 'Ihr Account konnte nicht aktualisiert werden.'
         },
         feedback: {
             enterEmailLogin: 'Bitte geben Sie Ihre E-Mail Adresse ein.',
@@ -154,8 +156,11 @@ const translationObject = {
         },
         controls: {
             login: 'Einloggen',
+            loggingIn: 'Wird eingeloggt...',
             register: 'Registrieren',
             registering: 'Wird registriert...',
+            update: 'Aktualisieren',
+            updating: 'Wird aktualisiert...',
             camera: 'Kamera',
             upload: 'Foto hochladen',
             back: 'Zurürck',

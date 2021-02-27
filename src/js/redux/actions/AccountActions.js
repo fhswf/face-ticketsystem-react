@@ -22,6 +22,27 @@ export function requestUser() {
 
 export const RECEIVE_USER = "RECEIVE_USER";
 
+export function updateUser(user) {
+    console.log("Let's update the user")
+    return (dispatch, getState) => {
+        return new Promise((resolve, reject) => {
+            dispatch(requestUser());
+            let body = {
+                id: getState().user.data.value._id,
+                user: user
+            };
+            client.httpPost('auth/updateUser', body)
+                .then(result => {
+                    if(result.updated) resolve({});
+                    reject({message: 'message.updateAccountFail'});
+                })
+                .catch(err => {
+                    reject({message: 'message.updateAccountFail'});
+                })
+        })
+    }
+}
+
 export function receiveUser(user, loggedIn = false, status = fetchStatusType.success, error = null) {
     return {
         type: RECEIVE_USER,
@@ -114,7 +135,11 @@ export function isEmailOccupied(email) {
     return (dispatch, getState) => {
         dispatch(requestEmailOccupied());
         return new Promise((resolve, reject) => {
-            client.httpPost('/auth/checkEmail', {email})
+            let body = {
+                email: email,
+                user: getState().user.data.value
+            };
+            client.httpPost('/auth/checkEmail', body)
                 .then(result => {
                     if(result && result.hasOwnProperty('occupied')) {
                         dispatch(receiveEmailOccupied(result.occupied));

@@ -10,6 +10,7 @@ import VisitorForm from "./views/forms/VisitorForm";
 import UserDisclosures from "./views/UserDisclosures";
 import {emptyVisitorDisclosure} from "../redux/reducers/VisitorDisclosureReducers";
 import TicketForm from "./views/forms/TicketForm";
+import EditAccount from "./views/EditAccount";
 
 const __webpack_public_path__ = process.env.ASSET_PATH;
 
@@ -37,12 +38,14 @@ class App extends Component {
                         }
                         <LoginView/>
                     </Route>
+
                     <Route path="/home">
                         {
                             !this.props.user.data.loggedIn && <Redirect to="/login"/>
                         }
                         <TicketForm/>
                     </Route>
+
                     <Route exact path="/disclosures">
                         {
                             !this.props.user.data.loggedIn && <Redirect to="/login"/>
@@ -53,6 +56,14 @@ class App extends Component {
                     <Route exact path="/disclosures/visitor">
                         <VisitorForm readOnly={true}/>
                     </Route>
+
+                    <Route exact path="/account">
+                        <h1>TODO</h1>
+                    </Route>
+                    <Route exact path="/account/edit">
+                        <EditAccount/>
+                    </Route>
+
                     <Route path="/">
                         {
                             this.props.user.data.loggedIn && <Redirect to="/home"/>
