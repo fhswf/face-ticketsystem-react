@@ -50,7 +50,7 @@ class UserDisclosures extends Component {
                 <Button variant='primary' onClick={() => {
                     // Save the QR-Code as an image
                     const canvas = document.getElementById(QR_CODE_ID);
-                    const pngUrl = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
+                    const pngUrl = canvas.toDataURL("image/png");
                     download(pngUrl, this.state.currentDisclosure._id + '.png', 'image/png');
                 }}>
                     {I18n.t('controls.download')}
