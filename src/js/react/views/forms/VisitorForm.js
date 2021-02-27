@@ -4,11 +4,8 @@ import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import {I18n} from 'react-redux-i18n';
 import {Container, Row, Col, Form, Button} from "react-bootstrap";
-import DatePicker from 'react-datepicker';
 import PropTypes from "prop-types";
 import {withRouter} from "react-router-dom";
-import {emptyVisitorDisclosure} from "../../../redux/reducers/VisitorDisclosureReducers";
-import produce from "immer";
 import _ from "lodash";
 
 class VisitorForm extends Component {

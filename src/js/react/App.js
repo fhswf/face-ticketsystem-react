@@ -18,12 +18,17 @@ class App extends Component {
     constructor(props) {
         super(props);
         this._renderNewVisitorDisclosure = this._renderNewVisitorDisclosure.bind(this);
+        this._renderEditAccount = this._renderEditAccount.bind(this);
     }
 
     _renderNewVisitorDisclosure() {
-        console.log("Entering");
         this.props.setVisitorDisclosure(emptyVisitorDisclosure);
         return <VisitorForm/>
+    }
+
+    _renderEditAccount(readOnly = false) {
+        this.props.setUser(this.props.user.data.value);
+        return <EditAccount readOnly={readOnly}/>
     }
 
     render() {
@@ -57,12 +62,8 @@ class App extends Component {
                         <VisitorForm readOnly={true}/>
                     </Route>
 
-                    <Route exact path="/account">
-                        <h1>TODO</h1>
-                    </Route>
-                    <Route exact path="/account/edit">
-                        <EditAccount/>
-                    </Route>
+                    <Route exact path="/account" render={() => this._renderEditAccount(true)}/>
+                    <Route exact path="/account/edit" render={() => this._renderEditAccount(false)}/>
 
                     <Route path="/">
                         {

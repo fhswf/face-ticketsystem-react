@@ -56,7 +56,10 @@ const translationObject = {
             logoutFail: 'Fehler beim Ausloggen',
             registerFailTitle: 'Registrierung fehlgeschlagen',
             registerFailText: 'Ihr Account konnte nicht erstellt werden.',
-            updateAccountFail: 'Ihr Account konnte nicht aktualisiert werden.'
+            updateAccountFailTitle: 'Aktualisierung fehlgeschlagen',
+            updateAccountFailText: 'Ihr Account konnte nicht aktualisiert werden.',
+            updateAccountSuccessTitle: 'Konto aktualisiert',
+            updateAccountSuccessText: 'Ihr Account wurde erfolgreich aktualisiert.'
         },
         feedback: {
             enterEmailLogin: 'Bitte geben Sie Ihre E-Mail Adresse ein.',

@@ -30,15 +30,24 @@ export function updateUser(user) {
                 id: getState().user.data.value._id,
                 user: user
             };
-            client.httpPost('auth/updateUser', body)
+            client.httpPost('/auth/updateUser', body)
                 .then(result => {
-                    if(result.updated) resolve({});
+                    if(result.updated) resolve(user);
                     reject({message: 'message.updateAccountFail'});
                 })
                 .catch(err => {
                     reject({message: 'message.updateAccountFail'});
                 })
         })
+    }
+}
+
+export const SET_USER = "SET_USER";
+
+export function setUser(user) {
+    return {
+        type: SET_USER,
+        user: user
     }
 }
 

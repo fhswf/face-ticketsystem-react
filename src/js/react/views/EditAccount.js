@@ -3,7 +3,7 @@ import {ActionCreators} from "../../redux/actions/ActionCreators";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import {I18n} from 'react-redux-i18n';
-import {Container, Tab, Tabs, Row, Col, Form, Button, Dropdown, DropdownButton, Alert, Spinner} from 'react-bootstrap';
+import {Container, Row, Col, Form, Button, Dropdown, DropdownButton, Alert, Spinner} from 'react-bootstrap';
 import {withRouter} from "react-router-dom";
 import {emptyUser} from "../../redux/reducers/AccountReducers";
 import PropTypes from "prop-types";
@@ -29,7 +29,9 @@ class EditAccount extends Component {
             validated: false,
             user: emptyUser,
             isTryingToUpdate: false,
-            isEmailOccupied: false
+            isEmailOccupied: false,
+            updateFailed: false,
+            updateSuccess: false
         }
     }
 
@@ -54,12 +56,16 @@ class EditAccount extends Component {
 
             this.props.updateUser(this.state.user)
                 .then(() => {
-                    // TODO Dialog n stuff
-                    this.setState({isTryingToUpdate: false});
+                    this.setState({
+                        isTryingToUpdate: false,
+                        updateSuccess: true
+                    });
                 })
                 .catch(() => {
-                    // TODO Dialog n stuff
-                    this.setState({isTryingToUpdate: false});
+                    this.setState({
+                        isTryingToUpdate: false,
+                        updateFailed: true
+                    });
                 })
         }
     }
@@ -67,6 +73,20 @@ class EditAccount extends Component {
     render() {
         let self = this;
         return <Container id="basic-form">
+            <SimpleDialog show={this.state.updateFailed}
+                          handleClose={() => {
+                              self.setState({updateFailed: false})
+                          }}
+                          title={I18n.t('message.updateAccountFailTitle')}
+                          text={I18n.t('message.updateAccountFailText')}
+            />
+            <SimpleDialog show={this.state.updateSuccess}
+                          handleClose={() => {
+                              self.setState({updateSuccess: false})
+                          }}
+                          title={I18n.t('message.updateAccountSuccessTitle')}
+                          text={I18n.t('message.updateAccountSuccessText')}
+            />
             <h2>{I18n.t('header.updateUser')}</h2>
             <h3>{I18n.t('header.loginData')}</h3>
             <Form onSubmit={this._updateUser} noValidate>
@@ -76,6 +96,7 @@ class EditAccount extends Component {
                         <Form.Control type="email" placeholder={I18n.t('placeholder.email')}
                                       onChange={handleNewEmailChange(self)}
                                       isValid={isEmailValid(this)}
+                                      disabled={this.props.readOnly}
                                       isInvalid={(this.state.validated || this.state.user.email) && !isEmailValid(this)}
                                       value={this.state.user.email}/>
                         <Form.Control.Feedback type="invalid">
@@ -93,6 +114,7 @@ class EditAccount extends Component {
                     <Form.Label column sm="4">{I18n.t('data.salutation')}:</Form.Label>
                     <Col>
                         <DropdownButton
+                            disabled={this.props.readOnly}
                             title={getSalutationDropdownTitle(this.state.user.personal.salutation)}
                             variant="outline-primary"
                             onSelect={handleDropdown(this, 'user.personal.salutation')}>
@@ -115,6 +137,7 @@ class EditAccount extends Component {
                     <Form.Label column sm="4">{I18n.t('data.firstname')}*:</Form.Label>
                     <Col>
                         <Form.Control type="text" required
+                                      disabled={this.props.readOnly}
                                       placeholder={I18n.t('placeholder.firstname')}
                                       isValid={isNameValid(this.state.user.personal.firstname)}
                                       isInvalid={
@@ -132,6 +155,7 @@ class EditAccount extends Component {
                     <Form.Label column sm="4">{I18n.t('data.lastname')}*:</Form.Label>
                     <Col>
                         <Form.Control type="text" required
+                                      disabled={this.props.readOnly}
                                       placeholder={I18n.t('placeholder.lastname')}
                                       isValid={isNameValid(this.state.user.personal.lastname)}
                                       isInvalid={
@@ -149,6 +173,7 @@ class EditAccount extends Component {
                     <Form.Label column sm="4">{I18n.t('data.phone')}*:</Form.Label>
                     <Col>
                         <Form.Control type="text" required
+                                      disabled={this.props.readOnly}
                                       placeholder={I18n.t('placeholder.phone')}
                                       isValid={isFieldValid(this.state.user.personal.phonenumber, config.controls.user.phone.min)}
                                       isInvalid={
@@ -168,6 +193,7 @@ class EditAccount extends Component {
                     <Form.Label column sm="4">{I18n.t('data.zipcode')}*:</Form.Label>
                     <Col>
                         <Form.Control type="text" required
+                                      disabled={this.props.readOnly}
                                       placeholder={I18n.t('placeholder.zipcode')}
                                       isValid={isFieldValid(this.state.user.personal.zipcode, config.controls.user.zip.min)}
                                       isInvalid={
@@ -185,6 +211,7 @@ class EditAccount extends Component {
                     <Form.Label column sm="4">{I18n.t('data.city')}*:</Form.Label>
                     <Col>
                         <Form.Control type="text" required
+                                      disabled={this.props.readOnly}
                                       placeholder={I18n.t('placeholder.city')}
                                       isValid={isFieldValid(this.state.user.personal.city, 1)}
                                       isInvalid={
@@ -202,6 +229,7 @@ class EditAccount extends Component {
                     <Form.Label column sm="4">{I18n.t('data.address1')}*:</Form.Label>
                     <Col>
                         <Form.Control type="text" required
+                                      disabled={this.props.readOnly}
                                       placeholder={I18n.t('placeholder.address1')}
                                       isValid={isFieldValid(this.state.user.personal.address1, 1)}
                                       isInvalid={
@@ -219,12 +247,13 @@ class EditAccount extends Component {
                     <Form.Label column sm="4">{I18n.t('data.address2')}:</Form.Label>
                     <Col>
                         <Form.Control type="text"
+                                      disabled={this.props.readOnly}
                                       placeholder={I18n.t('placeholder.address2')}
                                       onChange={handleChange(this, 'user.personal.address2')}
                                       value={this.state.user.personal.address2}/>
                     </Col>
                 </Form.Group>
-                <Button variant="primary" type="submit" disabled={this.state.isTryingToUpdate}>
+                <Button variant="primary" type="submit" disabled={this.state.isTryingToUpdate || this.props.readOnly}>
                     {
                         this.state.isTryingToUpdate &&
                         <span>

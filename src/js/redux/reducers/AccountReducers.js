@@ -70,5 +70,8 @@ export const user = createReducer({
         draft.data.status = action.status;
         draft.data.error = action.error;
         draft.data.loggedIn = action.loggedIn
+    },
+    [AccountActions.SET_USER](draft, action) {
+        draft.data.value = action.user;
     }
 });
