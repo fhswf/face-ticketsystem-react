@@ -3,20 +3,25 @@ import {ActionCreators} from "../../../redux/actions/ActionCreators";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import {I18n} from 'react-redux-i18n';
-import {Container, Row, Col, Form, Button} from "react-bootstrap";
+import {Container, Row, Col, Form, Button, DropdownButton, Dropdown, Tooltip, OverlayTrigger} from "react-bootstrap";
 import PropTypes from "prop-types";
 import {withRouter} from "react-router-dom";
 import produce from "immer";
 import _ from "lodash";
 import CurrencyPicker from "../../components/CurrencyPicker/CurrencyPicker";
+import {getSalutationDropdownTitle, handleDropdown} from "../../accountReactFunctions";
+import SimpleDialog from "../../components/SimpleDialog";
 
 class TicketForm extends Component {
     constructor(props) {
         super(props);
         this._finalize = this._finalize.bind(this);
         this._renderTextFieldFormGroup = this._renderTextFieldFormGroup.bind(this);
+        this._getStatusDropdownTitle = this._getStatusDropdownTitle.bind(this);
         this.state = {
-            validated: false
+            validated: false,
+            saveFailed: false,
+            saveSuccess: false
         };
     }
 
@@ -29,21 +34,42 @@ class TicketForm extends Component {
             this.setState({validated: true});
         }
         else {
-            this.props.createTicket();
+            this.props.createTicket()
+                .then(ticket => {
+                    this.setState({saveSuccess: true})
+                })
+                .catch(err => {
+                    this.setState({saveFailed: true})
+                });
         }
     }
 
-    _renderTextFieldFormGroup(valueProperty, labelProperty, feedbackProperty, updateFieldFn, required = true) {
+    /**
+     * Renders a <Form.Group> for text fields.
+     * @param valueProperty The value of the ticket to be updated.
+     * @param labelProperty The i18n label property to be shown.
+     * @param feedbackProperty The i18n feedback property.
+     * @param updateFieldFn The update function to be called onChange (2 params: valueProperty, value)
+     * @param required Whether or not it's an required field. Default true.
+     * @param isNumeric Whether or not the input is numeric. Default false.
+     * @returns {*} The <Form.Group> to be rendered.
+     * @private
+     */
+    _renderTextFieldFormGroup(valueProperty, labelProperty, feedbackProperty, updateFieldFn, required = true, isNumeric = false) {
         return <Form.Group as={Row}>
             <Form.Label column sm="4">{I18n.t(labelProperty)}:</Form.Label>
             <Col>
                 <Form.Control type="text" placeholder={I18n.t(labelProperty)}
                               onChange={(event) => {
-                                  updateFieldFn(valueProperty, event.target.value)
+                                  let value = event.target.value;
+                                  if (isNumeric) {
+                                      value = value.replace(/[^\d+|]*/g, '');
+                                  }
+                                  updateFieldFn(valueProperty, value)
                               }}
                               required={required}
                               disabled={this.props.readOnly}
-                              value={_.get(this.props.ticket.value, valueProperty) || ''}
+                              value={_.get(this.props.ticket, valueProperty) || ''}
                 />
                 <Form.Control.Feedback type="invalid">
                     {I18n.t(feedbackProperty)}
@@ -52,8 +78,40 @@ class TicketForm extends Component {
         </Form.Group>
     }
 
+    _getStatusDropdownTitle() {
+        if (!this.props.ticket.status) {
+            return I18n.t('data.ticket.status.title');
+        }
+        return I18n.t('data.ticket.status.' + this.props.ticket.status);
+    }
+
+    // _renderCustomFields() {
+    //     return this.props.ticket.customFields.map(customField => {
+    //         return this._renderTextFieldFormGroup(
+    //             'customField.' + customField.name,
+    //             ''
+    //             )
+    //     })
+    // }
+
     render() {
+        let self = this;
         return <Container id="basic-form">
+            <SimpleDialog show={this.state.saveFailed}
+                          handleClose={() => {
+                              self.setState({saveFailed: false})
+                          }}
+                          title={I18n.t('message.saveTicketFailTitle')}
+                          text={I18n.t('message.saveTicketFailText')}
+            />
+            <SimpleDialog show={this.state.saveSuccess}
+                          handleClose={() => {
+                              self.setState({saveSuccess: false});
+                              self.props.history.push('/tickets');
+                          }}
+                          title={I18n.t('message.saveTicketSuccessTitle')}
+                          text={I18n.t('message.saveTicketSuccessText')}
+            />
             <Row>
                 <Col>
                     <h2 id='special-title'>{I18n.t('header.ticket.create')}</h2>
@@ -73,29 +131,58 @@ class TicketForm extends Component {
                             <Col className='d-inline-flex'>
                                 <Form.Control type="text" placeholder={I18n.t('data.ticket.price.value')}
                                               onChange={(event) => {
-                                                  this.props.updateTicketField('price.value', event.target.value)
+                                                  let value = event.target.value.replace(/[^\d+|]*/g, '');
+                                                  this.props.updateTicketField('price.value', value)
                                               }}
                                               className='mr-2'
                                               required={true}
                                               disabled={this.props.readOnly}
-                                              value={this.props.ticket.value.price.value || ''}
+                                              value={this.props.ticket.price.value || ''}
                                 />
                                 <CurrencyPicker
                                     onSelect={(country, currency) => {
                                         this.props.updateTicketField('price.currency', currency);
                                     }}
-                                    currency={this.props.ticket.value.price.currency || 'EUR'}
+                                    currency={this.props.ticket.price.currency || 'EUR'}
                                 />
                                 <Form.Control.Feedback type="invalid">
                                     {I18n.t('feedback.ticket.price.currency')}
                                 </Form.Control.Feedback>
                             </Col>
                         </Form.Group>
+                        <Form.Group controlId="statusForm" as={Row}>
+                            <Form.Label column sm="4">{I18n.t('data.ticket.status.title')}:</Form.Label>
+                            <Col>
+                                <DropdownButton
+                                    disabled={this.props.readOnly}
+                                    title={this._getStatusDropdownTitle()}
+                                    variant="outline-primary"
+                                    onSelect={(eventKey, event) => {
+                                        this.props.updateTicketField('status', eventKey)
+                                    }}>
+                                    <Dropdown.Item eventKey='purchasable'>
+                                        {I18n.t('data.ticket.status.purchasable')}
+                                    </Dropdown.Item>
+                                    <Dropdown.Item eventKey='inactive'>
+                                        {I18n.t('data.ticket.status.inactive')}
+                                    </Dropdown.Item>
+                                </DropdownButton>
+                                <Form.Control.Feedback type="invalid">
+                                    {I18n.t('feedback.ticket.enterStatus')}
+                                </Form.Control.Feedback>
+                            </Col>
+                        </Form.Group>
                         {this._renderTextFieldFormGroup(
-                            'status',
-                            'data.ticket.status',
-                            'feedback.ticket.status',
-                            this.props.updateTicketField)}
+                            'buyLimit',
+                            'data.ticket.buyLimit',
+                            'feedback.ticket.buyLimit',
+                            this.props.updateTicketField,
+                            true,
+                            true
+                        )}
+                        <Button variant="primary" type="submit">
+                            {I18n.t('controls.createTicket')}
+                        </Button>
                     </Form>
                 </Col>
             </Row>
@@ -114,7 +201,7 @@ TicketForm.propTypes = {
  */
 function mapStateToProps(state) {
     return {
-        ticket: state.ticket
+        ticket: state.ticket.value
     };
 }
 

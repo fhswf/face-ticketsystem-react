@@ -29,7 +29,7 @@ export const ticket = createReducer({
     },
     [TicketActions.RECEIVE_TICKET](draft, action) {
         draft.isFetching = false;
-        draft.value = action.user;
+        draft.value = action.ticket;
         draft.lastUpdated = action.receivedAt;
         draft.status = action.status;
         draft.error = action.error;

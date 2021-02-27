@@ -59,7 +59,16 @@ const translationObject = {
             updateAccountFailTitle: 'Aktualisierung fehlgeschlagen',
             updateAccountFailText: 'Ihr Account konnte nicht aktualisiert werden.',
             updateAccountSuccessTitle: 'Konto aktualisiert',
-            updateAccountSuccessText: 'Ihr Account wurde erfolgreich aktualisiert.'
+            updateAccountSuccessText: 'Ihr Account wurde erfolgreich aktualisiert.',
+            saveDisclosureFailTitle: 'Fehler beim Speichern',
+            saveDisclosureFailText: 'Das Formular zur Selbstauskunft konnte nicht gespeichert werden.',
+            saveDisclosureSuccessTitle: 'Selbstauskunft gespeichert',
+            saveDisclosureSuccessText: 'Das Formular zur Selbstauskunft wurde erfolgreich gespeichert. Sie können es '
+                + 'nun in der Gesamtübersicht als PDF oder QR-Code herunterladen.',
+            saveTicketFailTitle: 'Fehler beim Erstellen des Tickets',
+            saveTicketFailText: 'Das Ticket konnte nicht erstellt.',
+            saveTicketSuccessTitle: 'Ticket gespeichert',
+            saveTicketSuccessText: 'Das Ticket wurde erfolgreich gespeichert. Sie kehren zur Ticketübersicht zurück.'
         },
         feedback: {
             enterEmailLogin: 'Bitte geben Sie Ihre E-Mail Adresse ein.',
@@ -93,7 +102,8 @@ const translationObject = {
                     currency: 'Bitte wählen Sie die Währung des Ticketpreises aus.'
                 },
                 status: 'Bitte wählen Sie den Status des Tickets aus.',
-                buyLimit: 'Bitte geben Sie das Kauflimit der Tickets ein. Wählen Sie 0 wenn es kein Kauflimit für Tickets geben soll.'
+                buyLimit: 'Bitte geben Sie das Kauflimit der Tickets ein. Wählen Sie 0 wenn es kein Kauflimit für Tickets geben soll.',
+                enterStatus: 'Bitte wählen Sie einen gültigen Ticketstatus.'
             }
         },
         data: {
@@ -139,7 +149,13 @@ const translationObject = {
                 price: {
                     value: 'Preis in Cent',
                     currency: 'Währung'
-                }
+                },
+                status: {
+                    title: 'Ticketstatus',
+                    purchasable: 'Erwerbbar',
+                    inactive: 'Deaktiviert'
+                },
+                buyLimit: 'Kauflimit'
             }
         },
         placeholder: {
@@ -179,7 +195,8 @@ const translationObject = {
             generatePDF: 'PDF-Datei erstellen',
             download: 'Download',
             ok: 'Ok',
-            close: 'Schließen'
+            close: 'Schließen',
+            createTicket: 'Ticket anlegen'
         },
         information: {
             imageProcessing: 'Aufgrund des Ladens der Gesichtserkennung kann das erstmalige Hochladen eines Bildes '
@@ -207,6 +224,9 @@ const translationObject = {
                     'aussprechen. Er hat keine Rückwirkung. Die Verarbeitung Ihrer Daten bis zu diesem Zeitpunkt bleibt ' +
                     'rechtmäßig. Sie wurden auf den Aushang zu den "Informationspflichten bezüglich der Erhebung von ' +
                     'Daten von Besuchern bzw. Kontaktpersonen von Patienten" hingewiesen.'
+            },
+            ticket: {
+                buyLimit: 'Tragen Sie den Wert 0 ein, falls es kein Kauflimit geben soll.'
             }
         }
     }

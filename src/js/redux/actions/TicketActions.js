@@ -70,12 +70,12 @@ export function createTicket() {
                         resolve(result.ticket);
                     }
                     else {
-                        dispatch(receiveTicket(undefined));
+                        dispatch(receiveTicket(getState().ticket.value, fetchStatusType.error));
                         reject('Bad Response.');
                     }
                 })
                 .catch(err => {
-                    dispatch(receiveTicket(undefined));
+                    dispatch(receiveTicket(getState().ticket.value, fetchStatusType.error, err));
                     reject(err.message);
                 })
         })
