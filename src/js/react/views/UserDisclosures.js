@@ -13,6 +13,7 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import config from "../../config/Config";
 import QRCode from "qrcode.react";
 import {fillVisitorDisclosurePDF} from "../../backend/PDFOperations";
+import download from 'downloadjs'
 
 const QR_CODE_ID = 'qrcode';
 
@@ -50,10 +51,7 @@ class UserDisclosures extends Component {
                     // Save the QR-Code as an image
                     const canvas = document.getElementById(QR_CODE_ID);
                     const pngUrl = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
-                    const a = document.createElement('a');
-                    a.download = this.state.currentDisclosure._id + '.png';
-                    a.href = pngUrl;
-                    a.click();
+                    download(pngUrl, this.state.currentDisclosure._id + '.png', 'image/png');
                 }}>
                     {I18n.t('controls.download')}
                 </Button>
