@@ -3,6 +3,8 @@ const translationObject = {
         nav: {
             home: 'Startseite',
             tickets: 'Tickets',
+            showTickets: 'Alle Tickets anzeigen',
+            addTicket: 'Neues Ticket hinzufügen',
             account: 'Benutzerkonto',
             showaccount: 'Konto einsehen',
             editaccount: 'Konto bearbeiten',
@@ -98,7 +100,7 @@ const translationObject = {
             ticket: {
                 name: 'Bitte geben Sie die Bezeichnung des Tickets ein.',
                 price: {
-                    value: 'Bitte geben Sie den Preis (Centbetrag) des Tickets ein.',
+                    value: 'Bitte geben Sie den Preis des Tickets ein.',
                     currency: 'Bitte wählen Sie die Währung des Ticketpreises aus.'
                 },
                 status: 'Bitte wählen Sie den Status des Tickets aus.',

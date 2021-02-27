@@ -51,6 +51,11 @@ class App extends Component {
                         <TicketForm/>
                     </Route>
 
+                    <Route exact path="/tickets/add-ticket" render={() => {
+                        this.props.resetTicket();
+                        return <TicketForm/>
+                    }}/>
+
                     <Route exact path="/disclosures">
                         {
                             !this.props.user.data.loggedIn && <Redirect to="/login"/>

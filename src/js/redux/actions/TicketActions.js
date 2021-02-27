@@ -35,6 +35,14 @@ export function setTicket(ticket) {
     }
 }
 
+export const RESET_TICKET = "RESET_TICKET";
+
+export function resetTicket() {
+    return {
+        type: RESET_TICKET
+    }
+}
+
 export const UPDATE_TICKET_FIELD = "UPDATE_TICKET_FIELD";
 
 export function updateTicketField(field, value) {

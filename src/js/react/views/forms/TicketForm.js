@@ -21,7 +21,11 @@ class TicketForm extends Component {
         this.state = {
             validated: false,
             saveFailed: false,
-            saveSuccess: false
+            saveSuccess: false,
+            price: {
+                euros: '',
+                cents: ''
+            }
         };
     }
 
@@ -63,7 +67,7 @@ class TicketForm extends Component {
                               onChange={(event) => {
                                   let value = event.target.value;
                                   if (isNumeric) {
-                                      value = value.replace(/[^\d+|]*/g, '');
+                                      value = value.replace(/[^\d]*/g, '');
                                   }
                                   updateFieldFn(valueProperty, value)
                               }}
@@ -129,15 +133,40 @@ class TicketForm extends Component {
                         <Form.Group as={Row}>
                             <Form.Label column sm="4">{I18n.t('data.ticket.price.value')}:</Form.Label>
                             <Col className='d-inline-flex'>
-                                <Form.Control type="text" placeholder={I18n.t('data.ticket.price.value')}
-                                              onChange={(event) => {
-                                                  let value = event.target.value.replace(/[^\d+|]*/g, '');
-                                                  this.props.updateTicketField('price.value', value)
+                                <Form.Control type="text" placeholder={I18n.t('0')}
+                                              onChange={event => {
+                                                  let euros = event.target.value.replace(/[^\d]*/g, '') * 100;
+                                                  let cents = this.props.ticket.price.value % 100;
+                                                  this.props.updateTicketField('price.value', euros + cents);
                                               }}
+                                              sm="1"
                                               className='mr-2'
                                               required={true}
                                               disabled={this.props.readOnly}
-                                              value={this.props.ticket.price.value || ''}
+                                              value={Math.floor(this.props.ticket.price.value / 100) || ''}
+                                />
+                                <Form.Control type="text" placeholder={I18n.t('0')}
+                                              onChange={event => {
+                                                  let currentCents = this.props.ticket.price.value % 100;
+                                                  let inputCents = event.target.value.replace(/[^\d]*/g, '');
+                                                  inputCents = inputCents.replace(/^(.)0(.)/, '$1$2');
+                                                  inputCents %= 100;
+
+                                                  if(currentCents.toString().length < 2 || inputCents.toString().length < 2) {
+                                                      let euros = Math.floor(this.props.ticket.price.value / 100) * 100;
+                                                      this.props.updateTicketField('price.value', euros + inputCents);
+                                                  }
+                                              }}
+                                              sm="1"
+                                              className='mr-2'
+                                              required={true}
+                                              disabled={this.props.readOnly}
+                                              value={
+                                                  // this.props.ticket.price.value % 100
+                                                  (this.props.ticket.price.value % 100 < 10
+                                                      ? '0' + this.props.ticket.price.value % 100
+                                                      : this.props.ticket.price.value % 100)
+                                                  || ''}
                                 />
                                 <CurrencyPicker
                                     onSelect={(country, currency) => {
@@ -145,9 +174,9 @@ class TicketForm extends Component {
                                     }}
                                     currency={this.props.ticket.price.currency || 'EUR'}
                                 />
-                                <Form.Control.Feedback type="invalid">
-                                    {I18n.t('feedback.ticket.price.currency')}
-                                </Form.Control.Feedback>
+                                {/*<Form.Control.Feedback type="invalid">*/}
+                                {/*    {I18n.t('feedback.ticket.price.value')}*/}
+                                {/*</Form.Control.Feedback>*/}
                             </Col>
                         </Form.Group>
                         <Form.Group controlId="statusForm" as={Row}>

@@ -35,9 +35,14 @@ class Navigation extends Component {
                     </Nav.Link>
                     {
                         (this.props.user.data.loggedIn) &&
-                        <Nav.Link onSelect={() => this.props.history.push("/tickets")} eventKey="tickets" className="align-self-center">
-                            {I18n.t('nav.tickets')}
-                        </Nav.Link>
+                        <NavDropdown title={I18n.t('nav.tickets')} id="basic-navbar-nav" className="ml-auto align-self-center">
+                            <NavDropdown.Item onSelect={() => { this.props.history.push("/tickets") }} eventKey="tickets">
+                                {I18n.t('nav.showTickets')}
+                            </NavDropdown.Item>
+                            <NavDropdown.Item onSelect={() => { this.props.history.push("/tickets/add-ticket") }} eventKey="createTicket">
+                                {I18n.t('nav.addTicket')}
+                            </NavDropdown.Item>
+                        </NavDropdown>
                     }
                     {
                         (this.props.user.data.loggedIn) &&

@@ -38,6 +38,9 @@ export const ticket = createReducer({
     [TicketActions.SET_TICKET](draft, action) {
         draft.value = action.ticket;
     },
+    [TicketActions.RESET_TICKET](draft, action) {
+        draft.value = emptyTicket;
+    },
     [TicketActions.UPDATE_TICKET_FIELD](draft, action) {
         _.set(draft.value, action.field, action.value);
     },
