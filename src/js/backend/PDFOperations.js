@@ -3,6 +3,7 @@ import path from "path";
 import {visitorField2PdfField} from "./mapping/DisclosureMapping";
 import download from 'downloadjs'
 import config from "../config/Config";
+import {fileToArrayBuffer} from "./Utils";
 
 /**
  * Checks a Yes/No Checkbox depending on the condition.
@@ -70,5 +71,22 @@ export function fillVisitorDisclosurePDF(disclosure, visitor) {
             pdfDoc.save().then(pdfBytes => {
                 download(pdfBytes, disclosure._id + ".pdf", "application/pdf");
             })
+        })
+}
+
+/**
+ * Determine the form field of a PDF Document and creates a console log containing these field informations.
+ * @param file The PDF File object.
+ * @returns {Promise<PDFField[]>}
+ */
+export function getFormFieldsFromPDF(file) {
+    return fileToArrayBuffer(file)
+        .then(arrayBuffer => PDFDocument.load(arrayBuffer))
+        .then(form => {
+            console.info("form", form);
+            for (let i = 0; i < form.getForm().getFields().length; i++) {
+                console.log("field[" + i + "]:", form.getForm().getFields()[i].getName())
+            }
+            return form.getForm().getFields();
         })
 }
