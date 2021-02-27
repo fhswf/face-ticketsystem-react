@@ -47,7 +47,7 @@ export function updateVisitorDisclosureField(field, value) {
 }
 
 
-export function createVisitorDisclosure(disclosure) {
+export function createVisitorDisclosure() {
     return (dispatch, getState) => {
         dispatch(requestVisitorDisclosure());
         let request = Object.assign({}, getState().visitorDisclosure.value);
@@ -61,12 +61,12 @@ export function createVisitorDisclosure(disclosure) {
                         resolve(result.visitorDisclosure);
                     }
                     else {
-                        dispatch(receiveVisitorDisclosure(undefined));
+                        dispatch(receiveVisitorDisclosure(getState().visitorDisclosure.value, fetchStatusType.error));
                         reject('Bad Response.');
                     }
                 })
                 .catch(err => {
-                    dispatch(receiveVisitorDisclosure(undefined));
+                    dispatch(receiveVisitorDisclosure(getState().visitorDisclosure.value, fetchStatusType.error, err));
                     reject(err.message);
                 })
         })

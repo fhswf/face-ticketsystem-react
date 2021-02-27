@@ -7,6 +7,7 @@ import {Container, Row, Col, Form, Button} from "react-bootstrap";
 import PropTypes from "prop-types";
 import {withRouter} from "react-router-dom";
 import _ from "lodash";
+import SimpleDialog from "../../components/SimpleDialog";
 
 class VisitorForm extends Component {
     constructor(props) {
@@ -15,7 +16,9 @@ class VisitorForm extends Component {
         this._renderRadioButtonFormGroup = this._renderRadioButtonFormGroup.bind(this);
         this._renderTextFieldFormGroup = this._renderTextFieldFormGroup.bind(this);
         this.state = {
-            validated: false
+            validated: false,
+            saveFailed: false,
+            saveSuccess: false
         };
     }
 
@@ -28,16 +31,12 @@ class VisitorForm extends Component {
             this.setState({validated: true});
         }
         else {
-            this.props.createVisitorDisclosure(this.props.visitorDisclosure)
+            this.props.createVisitorDisclosure()
                 .then(disclosure => {
-                    // // TODO: Show success message
-                    // this.setState({
-                    //     disclosure: disclosure
-                    // })
-                    // // this.props.history.push('/');
+                    this.setState({saveSuccess: true})
                 })
                 .catch(err => {
-                    // TODO: show error message
+                    this.setState({saveFailed: true})
                 });
         }
     }
@@ -53,7 +52,7 @@ class VisitorForm extends Component {
                             onChange={() => {
                                 this.props.updateVisitorDisclosureField(valueProperty, true);
                             }}
-                            checked={_.get(this.props.visitorDisclosure.value, valueProperty)}
+                            checked={_.get(this.props.visitorDisclosure, valueProperty)}
                             name={labelProperty}
                             required inline label={I18n.t('data.yes')}/>
                 <Form.Check type="radio"
@@ -61,7 +60,7 @@ class VisitorForm extends Component {
                             onChange={() => {
                                 this.props.updateVisitorDisclosureField(valueProperty, false);
                             }}
-                            checked={!_.get(this.props.visitorDisclosure.value, valueProperty)}
+                            checked={!_.get(this.props.visitorDisclosure, valueProperty)}
                             name={labelProperty}
                             required inline label={I18n.t('data.no')}/>
                 <br/>
@@ -82,7 +81,7 @@ class VisitorForm extends Component {
                               }}
                               required={required}
                               disabled={this.props.readOnly}
-                              value={_.get(this.props.visitorDisclosure.value, valueProperty) || ''}
+                              value={_.get(this.props.visitorDisclosure, valueProperty) || ''}
                 />
                 <Form.Control.Feedback type="invalid">
                     {I18n.t(feedbackProperty)}
@@ -92,7 +91,23 @@ class VisitorForm extends Component {
     }
 
     render() {
+        let self = this;
         return <Container id="basic-form">
+            <SimpleDialog show={this.state.saveFailed}
+                          handleClose={() => {
+                              self.setState({saveFailed: false})
+                          }}
+                          title={I18n.t('message.saveDisclosureFailTitle')}
+                          text={I18n.t('message.saveDisclosureFailText')}
+            />
+            <SimpleDialog show={this.state.saveSuccess}
+                          handleClose={() => {
+                              self.setState({saveSuccess: false});
+                              self.props.history.push('/disclosures');
+                          }}
+                          title={I18n.t('message.saveDisclosureSuccessTitle')}
+                          text={I18n.t('message.saveDisclosureSuccessText')}
+            />
             <Row>
                 <Col>
                     <h2 id='special-title'>{I18n.t('header.disclosure.disclosureVisitor')}</h2>
@@ -123,10 +138,10 @@ class VisitorForm extends Component {
                         <p>{I18n.t('question.disclosure.returnRiskarea')}</p>
                         {this._renderRadioButtonFormGroup('returnRiskarea', 'question.disclosure.returnRiskarea', false)}
                         {
-                            this.props.visitorDisclosure.value.returnRiskarea && this._renderTextFieldFormGroup('riskarea', 'data.disclosure.riskarea', 'feedback.disclosure.riskarea')
+                            this.props.visitorDisclosure.returnRiskarea && this._renderTextFieldFormGroup('riskarea', 'data.disclosure.riskarea', 'feedback.disclosure.riskarea')
                         }
                         {
-                            this.props.visitorDisclosure.value.returnRiskarea && this._renderTextFieldFormGroup('riskdate', 'data.disclosure.riskdate', 'feedback.disclosure.riskdate')
+                            this.props.visitorDisclosure.returnRiskarea && this._renderTextFieldFormGroup('riskdate', 'data.disclosure.riskdate', 'feedback.disclosure.riskdate')
                         }
                         <p>{I18n.t('question.disclosure.quarantine')}</p>
                         {this._renderRadioButtonFormGroup('quarantine', 'question.disclosure.quarantine', false)}
@@ -183,7 +198,7 @@ VisitorForm.propTypes = {
  */
 function mapStateToProps(state) {
     return {
-        visitorDisclosure: state.visitorDisclosure
+        visitorDisclosure: state.visitorDisclosure.value
     };
 }
 
