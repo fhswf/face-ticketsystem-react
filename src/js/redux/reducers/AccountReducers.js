@@ -3,6 +3,7 @@ import * as AccountActions from '../actions/AccountActions';
 import fetchStatusType from "../actions/FetchStatusType";
 
 export const emptyUser = {
+    _id: undefined,
     email: '',
     password: '',
     role: 'customer',
