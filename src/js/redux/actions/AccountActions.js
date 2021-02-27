@@ -23,7 +23,6 @@ export function requestUser() {
 export const RECEIVE_USER = "RECEIVE_USER";
 
 export function updateUser(user) {
-    console.log("Let's update the user")
     return (dispatch, getState) => {
         return new Promise((resolve, reject) => {
             dispatch(requestUser());

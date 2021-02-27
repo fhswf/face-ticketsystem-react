@@ -40,21 +40,18 @@ class EditAccount extends Component {
     }
 
     _updateUser(event) {
-        console.log("Update user...")
         const form = event.currentTarget;
         event.preventDefault();
         this.setState({validated: false});
         if (form.checkValidity() === false) {
             event.stopPropagation();
             this.setState({validated: true});
-            console.log("not valid")
         }
         else {
             this.setState({
                 isTryingToUpdate: true
             });
 
-            console.log("Will now call update...")
             this.props.updateUser(this.state.user)
                 .then(() => {
                     // TODO Dialog n stuff
