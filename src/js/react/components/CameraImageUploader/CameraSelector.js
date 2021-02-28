@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Container, Row, Col, Dropdown, DropdownButton, Button} from "react-bootstrap";
+import {Container, Row, Dropdown, DropdownButton, Button} from "react-bootstrap";
 import {I18n} from 'react-redux-i18n';
 import PropTypes from "prop-types";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
@@ -10,7 +10,15 @@ import {createCanvas} from 'canvas';
 const MAX_HEIGHT = 1080;
 const MAX_WIDTH = 1920;
 
+/**
+ * A Component which contains a Dropdown containing all video input devices of the device using this webapp.
+ * It's possible to take pictures using this Component.
+ */
 class CameraSelector extends Component {
+    /**
+     * Create the Component.
+     * @param props The properties of the Component.
+     */
     constructor(props) {
         super(props);
         this._handleSelectVideo = this._handleSelectVideo.bind(this);
@@ -29,14 +37,26 @@ class CameraSelector extends Component {
         this.mediaStream = null; // Don't use this in the state, or the camera will go on/off all the time
     }
 
+    /**
+     * React lifecycle method, used to init all the video input devices.
+     */
     componentWillMount() {
         this._initDropdownDevices();
     }
 
+    /**
+     * React lifecycle method, used to turn off all the video input devices, so they won't be blocked in other applications.
+     */
     componentWillUnmount() {
         this._turnOffWebcam();
     }
 
+    /**
+     * React lifecycle method, used to play the MediaStream so the user sees the camera feed.
+     * @param prevPros The previous properties of the Component.
+     * @param prevState The previous state of the Component.
+     * @param snapshot Snapshot value which cannot be changed.
+     */
     componentDidUpdate(prevPros, prevState, snapshot) {
         if (this.webcamRef && this.webcamRef.current) {
             navigator.mediaDevices
@@ -62,18 +82,32 @@ class CameraSelector extends Component {
         }
     }
 
+    /**
+     * Turn off the Webcam by stopping all tracks of the MediaStream.
+     * @private
+     */
     _turnOffWebcam() {
         if (this.mediaStream) {
             this.mediaStream.getTracks().forEach(track => track.stop());
         }
     }
 
+    /**
+     * Get the device ID.
+     * @param device The MediaStreamTrack to get the device ID from; functionality differs from Browser.
+     * @returns {string|null|CameraSelector._handleSelectVideo.props|*|ConstrainDOMString|string|boolean}
+     * @private
+     */
     _getDeviceId(device) {
         if (device.getCapabilities)
             return device.getCapabilities().deviceId;
         return device.deviceId
     }
 
+    /**
+     * Init the Webcam-Device-Dropdown by getting all video input devices.
+     * @private
+     */
     _initDropdownDevices() {
         navigator.mediaDevices.enumerateDevices()
             .then(gotDevices => {
@@ -95,6 +129,12 @@ class CameraSelector extends Component {
             });
     }
 
+    /**
+     * Handle the selection of a webcam.
+     * @param eventKey The event key representing a device id.
+     * @param event The fired event - unused.
+     * @private
+     */
     _handleSelectVideo(eventKey, event) {
         this._turnOffWebcam();
         let device = this.devicesMap.get(eventKey);
@@ -108,11 +148,21 @@ class CameraSelector extends Component {
         })
     }
 
+    /**
+     * Get the title of the Dropdown by displaying default text or the device name if possible.
+     * @returns {*}
+     * @private
+     */
     _getDropdownTitle() {
         let device = this.devicesMap.get(this.state.deviceId);
         return device ? device.label : I18n.t('controls.selectVideo');
     }
 
+    /**
+     * Take a picture using the MediaStream- or Canvas-API.
+     * @param event The event caused this action - unused.
+     * @private
+     */
     _handleTakePicture(event) {
         let aspectRatio = this.state.width / this.state.height;
 
@@ -159,6 +209,10 @@ class CameraSelector extends Component {
         }
     }
 
+    /**
+     * Render the Component.
+     * @returns {*}
+     */
     render() {
         return <Container>
             <Row>

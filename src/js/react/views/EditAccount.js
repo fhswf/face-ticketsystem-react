@@ -3,25 +3,27 @@ import {ActionCreators} from "../../redux/actions/ActionCreators";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import {I18n} from 'react-redux-i18n';
-import {Container, Row, Col, Form, Button, Dropdown, DropdownButton, Alert, Spinner} from 'react-bootstrap';
+import {Container, Row, Col, Form, Button, Dropdown, DropdownButton, Spinner} from 'react-bootstrap';
 import {withRouter} from "react-router-dom";
 import {emptyUser} from "../../redux/reducers/AccountReducers";
 import PropTypes from "prop-types";
-import produce from "immer";
-import _ from 'lodash';
 import SimpleDialog from "../components/SimpleDialog";
-import CameraImageUploader from "../components/CameraImageUploader/CameraImageUploader";
 import config from "../../config/Config";
 import {
     getSalutationDropdownTitle,
     handleChange, handleDropdown,
     handleNewEmailChange,
-    isEmailValid, isFieldValid, isNameValid,
-    isPasswordValid,
-    isRepeatedPasswordValid
+    isEmailValid, isFieldValid, isNameValid
 } from "../accountReactFunctions";
 
+/**
+ * A React Component View for editing or viewing the currently logged in user.
+ */
 class EditAccount extends Component {
+    /**
+     * Create a new EditAccount view.
+     * @param props The properties of the Component.
+     */
     constructor(props) {
         super(props);
         this._updateUser = this._updateUser.bind(this);
@@ -35,12 +37,20 @@ class EditAccount extends Component {
         }
     }
 
+    /**
+     * React lifecycle method, used to init the working copy of the user to be edited.
+     */
     componentDidMount() {
         this.setState({
             user: this.props.user.data.value
         })
     }
 
+    /**
+     * Update the currently logged in user.
+     * @param event The Form-Event to be validated.
+     * @private
+     */
     _updateUser(event) {
         const form = event.currentTarget;
         event.preventDefault();
@@ -70,6 +80,10 @@ class EditAccount extends Component {
         }
     }
 
+    /**
+     * Render the Compoennt.
+     * @returns {*} The Component to be rendered.
+     */
     render() {
         let self = this;
         return <Container id="basic-form">

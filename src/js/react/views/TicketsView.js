@@ -3,14 +3,18 @@ import {ActionCreators} from "../../redux/actions/ActionCreators";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import {I18n} from 'react-redux-i18n';
-import {Container, Row, Col, Form, Button, Table, Modal} from "react-bootstrap";
-import PropTypes from "prop-types";
+import {Container, Row, Col} from "react-bootstrap";
 import {withRouter} from "react-router-dom";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import config from "../../config/Config";
 import TicketBox from "../components/TicketBox";
 
+/**
+ * A high order Component for displaying every ticket available.
+ */
 class TicketsView extends Component {
+    /**
+     * Create a new TIcketsView Component.
+     * @param props The properties of the Component.
+     */
     constructor(props) {
         super(props);
         this._renderTickets = this._renderTickets.bind(this);
@@ -19,10 +23,18 @@ class TicketsView extends Component {
         }
     }
 
+    /**
+     * React lifecycle method, used to fetch the tickets.
+     */
     componentDidMount() {
         this.props.fetchTickets();
     }
 
+    /**
+     * Render all the tickets as a <TicketBox>.
+     * @returns {*} The TicketBoxes to be rendered.
+     * @private
+     */
     _renderTickets() {
         if (!this.props.ticketList)
             return <></>;
@@ -31,6 +43,10 @@ class TicketsView extends Component {
         })
     }
 
+    /**
+     * Render the TicketsView Component.
+     * @returns {*} The Component to be renderd.
+     */
     render() {
         return <Container>
             <Row>

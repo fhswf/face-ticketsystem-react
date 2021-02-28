@@ -9,7 +9,14 @@ import {withRouter} from "react-router-dom";
 import _ from "lodash";
 import SimpleDialog from "../../components/SimpleDialog";
 
+/**
+ * A React Component for creating a new visitor disclosure.
+ */
 class VisitorForm extends Component {
+    /**
+     * Create a new VisitorForm.
+     * @param props The properties of the Component.
+     */
     constructor(props) {
         super(props);
         this._finalize = this._finalize.bind(this);
@@ -22,6 +29,11 @@ class VisitorForm extends Component {
         };
     }
 
+    /**
+     * Create the new visitor disclosure.
+     * @param event The <Form>-Event to be validated.
+     * @private
+     */
     _finalize(event) {
         const form = event.currentTarget;
         event.preventDefault();
@@ -41,7 +53,15 @@ class VisitorForm extends Component {
         }
     }
 
-    _renderRadioButtonFormGroup(valueProperty, labelProperty, doRenderLabel=true) {
+    /**
+     * Render a <Form.Group> for two Radio-Buttons.
+     * @param valueProperty The name of the value of the visitor disclosure to be related to the <Form.Check>.
+     * @param labelProperty The i18n value for the Label to be displayed and used as the <Form.Check>-Name.
+     * @param doRenderLabel If true, the <Form.Label> will be rendered. Default is true.
+     * @returns The <Form.Group> to be rendered.
+     * @private
+     */
+    _renderRadioButtonFormGroup(valueProperty, labelProperty, doRenderLabel = true) {
         return <Form.Group as={Row} className={"mb-0 mt-0" + doRenderLabel ? "" : " pt-0"}>
             {
                 doRenderLabel && <Form.Label column sm="5">{I18n.t(labelProperty)}:</Form.Label>
@@ -71,6 +91,15 @@ class VisitorForm extends Component {
         </Form.Group>
     }
 
+    /**
+     * Render a <Form.Group> for a text field.
+     * @param valueProperty The name of the value of the visitor disclosure to be related to the <Form.Control>.
+     * @param labelProperty The i18n value for the Label to be displayed and used as the <Form.Check>-Name.
+     * @param feedbackProperty The i18n value for displaying an error message, if the input is invalid.
+     * @param required Whether or not the field is required. Default is true.
+     * @returns The <Form.Group> to be rendered.
+     * @private
+     */
     _renderTextFieldFormGroup(valueProperty, labelProperty, feedbackProperty, required=true) {
         return <Form.Group as={Row}>
             <Form.Label column sm="4">{I18n.t(labelProperty)}:</Form.Label>
@@ -90,6 +119,10 @@ class VisitorForm extends Component {
         </Form.Group>
     }
 
+    /**
+     * Render the Component.
+     * @returns The Component to be rendered.
+     */
     render() {
         let self = this;
         return <Container id="basic-form">

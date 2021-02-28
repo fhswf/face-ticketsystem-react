@@ -3,6 +3,10 @@ import client from "../../backend/RestApi";
 
 export const REQUEST_TICKET = "REQUEST_TICKET";
 
+/**
+ * Redux action to request a ticket.
+ * @returns {{type: *}}
+ */
 export function requestTicket() {
     return {
         type: REQUEST_TICKET
@@ -12,6 +16,13 @@ export function requestTicket() {
 
 export const RECEIVE_TICKET = "RECEIVE_TICKET";
 
+/**
+ * Redux action to receive a ticket.
+ * @param ticket The received ticket.
+ * @param status The status of the fetch result.
+ * @param error The error which may have occurred.
+ * @returns {{type: *}}
+ */
 export function receiveTicket(ticket, status = fetchStatusType.success, error = null) {
     return {
         type: RECEIVE_TICKET,
@@ -24,6 +35,11 @@ export function receiveTicket(ticket, status = fetchStatusType.success, error = 
 
 export const SET_TICKET = "SET_TICKET";
 
+/**
+ * Redux action to set the current ticket.
+ * @param ticket The current ticket.
+ * @returns {function(*, *): Promise<unknown>}
+ */
 export function setTicket(ticket) {
     return (dispatch, getState) => {
         return new Promise((resolve, reject) =>
@@ -37,6 +53,10 @@ export function setTicket(ticket) {
 
 export const RESET_TICKET = "RESET_TICKET";
 
+/**
+ * Redux action to reset a Ticket.
+ * @returns {{type: *}}
+ */
 export function resetTicket() {
     return {
         type: RESET_TICKET
@@ -45,6 +65,12 @@ export function resetTicket() {
 
 export const UPDATE_TICKET_FIELD = "UPDATE_TICKET_FIELD";
 
+/**
+ * Redux action to update a field of the current ticket.
+ * @param field The field to be updated.
+ * @param value The value to be used to update the field.
+ * @returns {{field: *, type: *, value: *}}
+ */
 export function updateTicketField(field, value) {
     return {
         type: UPDATE_TICKET_FIELD,
@@ -55,6 +81,12 @@ export function updateTicketField(field, value) {
 
 export const UPDATE_TICKET_CUSTOM_FIELD = "UPDATE_TICKET_CUSTOM_FIELD";
 
+/**
+ * Redux action to update a custom field fo the current ticket.
+ * @param field The custom field to be updated.
+ * @param value The value to be used to update the custom field.
+ * @returns {{field: *, type: *, value: *}}
+ */
 export function updateTicketCustomField(field, value) {
     return {
         type: UPDATE_TICKET_CUSTOM_FIELD,
@@ -63,7 +95,10 @@ export function updateTicketCustomField(field, value) {
     }
 }
 
-
+/**
+ * Redux action to create a new ticket.
+ * @returns {function(*=, *=): Promise<unknown>} The resolved ticket from the database or the rejected error.
+ */
 export function createTicket() {
     return (dispatch, getState) => {
         dispatch(requestTicket());

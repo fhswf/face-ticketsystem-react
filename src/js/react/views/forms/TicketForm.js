@@ -3,16 +3,21 @@ import {ActionCreators} from "../../../redux/actions/ActionCreators";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import {I18n} from 'react-redux-i18n';
-import {Container, Row, Col, Form, Button, DropdownButton, Dropdown, Tooltip, OverlayTrigger} from "react-bootstrap";
+import {Container, Row, Col, Form, Button, DropdownButton, Dropdown} from "react-bootstrap";
 import PropTypes from "prop-types";
 import {withRouter} from "react-router-dom";
-import produce from "immer";
 import _ from "lodash";
 import CurrencyPicker from "../../components/CurrencyPicker/CurrencyPicker";
-import {getSalutationDropdownTitle, handleDropdown} from "../../accountReactFunctions";
 import SimpleDialog from "../../components/SimpleDialog";
 
+/**
+ * A React Component for creating a new Ticket.
+ */
 class TicketForm extends Component {
+    /**
+     * Create a new TicketForm.
+     * @param props The properties of the Component.
+     */
     constructor(props) {
         super(props);
         this._finalize = this._finalize.bind(this);
@@ -29,6 +34,11 @@ class TicketForm extends Component {
         };
     }
 
+    /**
+     * Create the ticket.
+     * @param event The <Form>-Event to be validated.
+     * @private
+     */
     _finalize(event) {
         const form = event.currentTarget;
         event.preventDefault();
@@ -82,6 +92,11 @@ class TicketForm extends Component {
         </Form.Group>
     }
 
+    /**
+     * The the title for the Status-Dropdown.
+     * @returns {*} The string to be dispalyed.
+     * @private
+     */
     _getStatusDropdownTitle() {
         if (!this.props.ticket.status) {
             return I18n.t('data.ticket.status.title');
@@ -89,15 +104,10 @@ class TicketForm extends Component {
         return I18n.t('data.ticket.status.' + this.props.ticket.status);
     }
 
-    // _renderCustomFields() {
-    //     return this.props.ticket.customFields.map(customField => {
-    //         return this._renderTextFieldFormGroup(
-    //             'customField.' + customField.name,
-    //             ''
-    //             )
-    //     })
-    // }
-
+    /**
+     * Render the Component.
+     * @returns {*} The Component to be rendered.
+     */
     render() {
         let self = this;
         return <Container id="basic-form">

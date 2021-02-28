@@ -2,6 +2,9 @@ import createReducer from "./CreateReducer";
 import * as AccountActions from '../actions/AccountActions';
 import fetchStatusType from "../actions/FetchStatusType";
 
+/**
+ * An empty user.
+ */
 export const emptyUser = {
     _id: undefined,
     email: '',
@@ -24,6 +27,10 @@ export const emptyUser = {
     faceId: ''
 };
 
+/**
+ * Redux reducer containing information whether or not an email is occupied.
+ * @type {reducer}
+ */
 export const emailOccupied = createReducer({
     isFetching: false,
     lastUpdated: undefined,
@@ -43,6 +50,10 @@ export const emailOccupied = createReducer({
     }
 });
 
+/**
+ * Redux reducer containing user information.
+ * @type {reducer}
+ */
 export const user = createReducer({
     data: {
         value: emptyUser,

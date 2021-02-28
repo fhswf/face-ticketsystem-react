@@ -3,6 +3,9 @@ import * as TicketActions from '../actions/TicketActions';
 import fetchStatusType from "../actions/FetchStatusType";
 import _ from 'lodash';
 
+/**
+ * An empty ticket.
+ */
 export const emptyTicket = {
     number: 0,
     name: '',
@@ -17,6 +20,10 @@ export const emptyTicket = {
     customFields: []
 };
 
+/**
+ * Redux reducer containing information about a ticket.
+ * @type {reducer}
+ */
 export const ticket = createReducer({
     value: emptyTicket,
     isFetching: false,

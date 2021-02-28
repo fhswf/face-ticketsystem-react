@@ -1,3 +1,6 @@
+/**
+ * Maps a country code to a currency code.
+ */
 export const country2currency = {
     'AU': 'AUD',
     'BR': 'BRL',
@@ -26,6 +29,9 @@ export const country2currency = {
     'US': 'USD'
 };
 
+/**
+ * Maps a currency code to a country code.
+ */
 export const currency2country = {
     'AUD': 'AU',
     'BRL': 'BR',

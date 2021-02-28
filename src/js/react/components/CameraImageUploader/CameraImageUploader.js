@@ -1,7 +1,7 @@
 import './CameraImageUploader.css';
 
 import React, {Component} from 'react';
-import {Container, Row, Col, Button, Card} from "react-bootstrap";
+import {Container, Row, Button} from "react-bootstrap";
 import PropTypes from "prop-types";
 import Dropzone from "react-dropzone";
 import Cropper from 'react-easy-crop';
@@ -23,7 +23,14 @@ const components = {
     imagePreview: 'imagePreview'
 };
 
+/**
+ * A Component for Uploading an image or taking a photo using an video input device, which can be selected.
+ */
 class CameraImageUploader extends Component {
+    /**
+     * Create the Component.
+     * @param props The properties of the Component.
+     */
     constructor(props) {
         super(props);
         this._handleAcceptDrop = this._handleAcceptDrop.bind(this);

@@ -2,6 +2,10 @@ import createReducer from "./CreateReducer";
 import * as DisclosureListActions from '../actions/DisclosureListActions';
 import fetchStatusType from "../actions/FetchStatusType";
 
+/**
+ * Redux reducer containing lists of disclosures.
+ * @type {reducer}
+ */
 export const disclosureList = createReducer({
     items: {
         visitorDisclosures: [],

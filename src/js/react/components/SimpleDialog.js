@@ -3,11 +3,22 @@ import {Modal, Button} from 'react-bootstrap'
 import PropTypes from "prop-types";
 import {I18n} from 'react-redux-i18n';
 
+/**
+ * A React-Bootstrap Modal Component with a close Button.
+ */
 class SimpleDialog extends Component {
+    /**
+     * Create a new SimpleDialog Component.
+     * @param props The properties of the Component.
+     */
     constructor(props) {
         super(props);
     }
 
+    /**
+     * Render the Component.
+     * @returns {*} The <Modal> to be rendered.
+     */
     render() {
         return <Modal show={this.props.show}>
             <Modal.Header closeButton>

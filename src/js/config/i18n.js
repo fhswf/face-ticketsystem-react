@@ -1,3 +1,7 @@
+/**
+ * The translations of the application. The first level of attributes must refer to a language.
+ * @see react-redux-i18n
+ */
 const translationObject = {
     de: {
         nav: {

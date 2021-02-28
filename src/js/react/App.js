@@ -11,6 +11,7 @@ import UserDisclosures from "./views/UserDisclosures";
 import {emptyVisitorDisclosure} from "../redux/reducers/VisitorDisclosureReducers";
 import TicketForm from "./views/forms/TicketForm";
 import EditAccount from "./views/EditAccount";
+import TicketsView from "./views/TicketsView";
 
 const __webpack_public_path__ = process.env.ASSET_PATH;
 
@@ -48,9 +49,12 @@ class App extends Component {
                         {
                             !this.props.user.data.loggedIn && <Redirect to="/login"/>
                         }
-                        <TicketForm/>
+                        <TicketsView/>
                     </Route>
 
+                    <Route exact path="/tickets" render={() => {
+                        return <TicketsView/>
+                    }}/>
                     <Route exact path="/tickets/add-ticket" render={() => {
                         this.props.resetTicket();
                         return <TicketForm/>

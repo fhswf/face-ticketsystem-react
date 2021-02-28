@@ -4,11 +4,16 @@ import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import {I18n} from 'react-redux-i18n';
 import {Nav, Navbar, NavDropdown} from "react-bootstrap";
-import PropTypes from "prop-types";
 import {withRouter} from "react-router-dom";
 
+/**
+ * A React Component for displaying a navigation bar in the top of the app.
+ */
 class Navigation extends Component {
-
+    /**
+     * Crate the Navigation Component.
+     * @param props The properties of the Component.
+     */
     constructor(props) {
         super(props);
         this._logout = this._logout.bind(this);
@@ -17,6 +22,10 @@ class Navigation extends Component {
         }
     }
 
+    /**
+     * Log the currently logged in user out.
+     * @private
+     */
     _logout() {
         this.props.logout()
             .then(() => {
@@ -24,6 +33,10 @@ class Navigation extends Component {
             });
     }
 
+    /**
+     * Render the Navigator Component.
+     * @returns {*} The Component to be rendered.
+     */
     render() {
         return (
             <Navbar bg="light" variant="pills" className="d-flex rounded mb-5">

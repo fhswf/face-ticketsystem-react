@@ -4,6 +4,9 @@ import fetchStatusType from "../actions/FetchStatusType";
 import {emptyUser} from "./AccountReducers";
 import _ from 'lodash';
 
+/**
+ * An empty visitor disclosure.
+ */
 export const emptyVisitorDisclosure = {
     visitor: emptyUser,
     patient: '',
@@ -30,6 +33,10 @@ export const emptyVisitorDisclosure = {
     formDate: new Date()
 };
 
+/**
+ * Redux reducer for an visitor disclosure.
+ * @type {reducer}
+ */
 export const visitorDisclosure = createReducer({
     value: emptyVisitorDisclosure,
     isFetching: false,

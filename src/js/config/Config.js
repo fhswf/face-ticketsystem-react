@@ -3,6 +3,9 @@ import storageSession from 'redux-persist/lib/storage/session';
 import { CookieStorage } from 'redux-persist-cookie-storage';
 import Cookies from 'cookies-js';
 
+/**
+ * The configuration of the application.
+ */
 const config = {
     backend: {
         //endpoint: "https://jupiter.fh-swf.de/fts-api"

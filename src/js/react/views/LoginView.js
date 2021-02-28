@@ -23,6 +23,10 @@ import {
  * The high order Component representing the login view.
  */
 class LoginView extends Component {
+    /**
+     * Create a new LoginView.
+     * @param props The properties of the Component.
+     */
     constructor(props) {
         super(props);
         this._login = this._login.bind(this);
@@ -106,18 +110,28 @@ class LoginView extends Component {
         }
     }
 
+    /**
+     * Update the picture to be displayed. Is called when taking a photo.
+     */
     _onPictureTaken(file) {
         this.setState({
             pictureToUpload: file
         });
     }
 
+    /**
+     * Update the information if the taken picture contains a face or not. Is called after taking a picture or cropping.
+     */
     _onPictureEvaluated(hasFace) {
         this.setState({
             pictureHasFace: hasFace
         });
     }
 
+    /**
+     * Render the Component.
+     * @returns The Component to be rendered.
+     */
     render() {
         let self = this;
         return <Container id="basic-form">

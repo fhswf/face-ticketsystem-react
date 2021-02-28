@@ -2,6 +2,10 @@ import createReducer from "./CreateReducer";
 import * as DisclosureListActions from '../actions/TicketListActions';
 import fetchStatusType from "../actions/FetchStatusType";
 
+/**
+ * Redux reducer containing a list of all tickets.
+ * @type {reducer}
+ */
 export const ticketList = createReducer({
     items: [],
     isFetching: false,

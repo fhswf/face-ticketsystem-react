@@ -3,11 +3,8 @@ import {ActionCreators} from "../../redux/actions/ActionCreators";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import {I18n} from 'react-redux-i18n';
-import {Container, Row, Col, Form, Button, Table, Modal} from "react-bootstrap";
-import PropTypes from "prop-types";
+import {Container, Button, Table, Modal} from "react-bootstrap";
 import {withRouter} from "react-router-dom";
-import produce from "immer";
-import _ from "lodash";
 import {faFilePdf, faQrcode} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import config from "../../config/Config";
@@ -15,9 +12,16 @@ import QRCode from "qrcode.react";
 import {fillVisitorDisclosurePDF} from "../../backend/PDFOperations";
 import download from 'downloadjs'
 
-const QR_CODE_ID = 'qrcode';
+const QR_CODE_ID = 'qrcode'; // id to the QRCode component, necessary for downloading it.
 
+/**
+ * A React Component for displaying all the disclosures of a user.
+ */
 class UserDisclosures extends Component {
+    /**
+     * Create a new UserDisclosures Component.
+     * @param props The properties of the Component-
+     */
     constructor(props) {
         super(props);
         this._renderDisclosures = this._renderDisclosures.bind(this);
@@ -29,10 +33,18 @@ class UserDisclosures extends Component {
         }
     }
 
+    /**
+     * React lifecycle method, used to fetch all the disclosures of the currently logged in user.
+     */
     componentDidMount() {
         this.props.fetchVisitorDisclosures();
     }
 
+    /**
+     * Render a Dialog for displaying and downloading the QRCode of the selected disclosure.
+     * @returns {*} A Modal dialog COmponent.
+     * @private
+     */
     _renderQRCode() {
         return <Modal show={this.state.showQR} onHide={() => {this.setState({showQR: false})}} size="sm">
             <Modal.Header closeButton>
@@ -59,6 +71,11 @@ class UserDisclosures extends Component {
         </Modal>
     }
 
+    /**
+     * Selects a disclosure and opens the QRCode Dialog Compoennt.
+     * @param disclosure The disclosure to be used to create a QRCode.
+     * @private
+     */
     _prepareQRCode(disclosure) {
         this.props.setVisitorDisclosure(disclosure);
         this.setState({
@@ -67,6 +84,11 @@ class UserDisclosures extends Component {
         })
     }
 
+    /**
+     * Render all the disclosures as table elements.
+     * @returns {*} The disclosures as table elements.
+     * @private
+     */
     _renderDisclosures() {
         if (!this.props.disclosureList || !this.props.disclosureList.items || !this.props.disclosureList.items.visitorDisclosures)
             return <></>;
@@ -102,6 +124,10 @@ class UserDisclosures extends Component {
         })
     }
 
+    /**
+     * Render the high order Component.
+     * @returns {*} The COmponent to be rendered.
+     */
     render() {
         return <Container>
             {this._renderQRCode()}
