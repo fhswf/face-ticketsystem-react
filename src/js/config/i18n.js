@@ -32,6 +32,8 @@ const translationObject = {
             },
             qr: 'QR-Code',
             ticket: {
+                ticket: 'Ticket',
+                availableTickets: 'Verfügbare Tickets',
                 create: 'Neues Ticket anlegen',
                 details: 'Ticket-Details',
                 custom: 'Benutzerdefinierte Felder'
@@ -149,7 +151,7 @@ const translationObject = {
             ticket: {
                 name: 'Ticketbezeichnung',
                 price: {
-                    value: 'Preis in Cent',
+                    value: 'Preis',
                     currency: 'Währung'
                 },
                 status: {
@@ -198,7 +200,8 @@ const translationObject = {
             download: 'Download',
             ok: 'Ok',
             close: 'Schließen',
-            createTicket: 'Ticket anlegen'
+            createTicket: 'Ticket anlegen',
+            buyTicket: 'Ticker kaufen'
         },
         information: {
             imageProcessing: 'Aufgrund des Ladens der Gesichtserkennung kann das erstmalige Hochladen eines Bildes '

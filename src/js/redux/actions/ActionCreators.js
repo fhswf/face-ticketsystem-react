@@ -23,6 +23,11 @@ import {
     fetchVisitorDisclosures
 } from "./DisclosureListActions";
 import {
+    requestTickets,
+    receiveTickets,
+    fetchTickets
+} from "./TicketListActions";
+import {
     requestTicket, receiveTicket, setTicket, updateTicketCustomField, updateTicketField, createTicket, resetTicket
 } from "./TicketActions";
 
@@ -36,6 +41,7 @@ export const ActionCreators = Object.assign({},
         requestVisitorDisclosure, receiveVisitorDisclosure, createVisitorDisclosure, setVisitorDisclosure,
         updateVisitorDisclosureField,
         requestVisitorDisclosures, receiveVisitorDisclosures, fetchVisitorDisclosures,
-        requestTicket, receiveTicket, setTicket, updateTicketCustomField, updateTicketField, createTicket, resetTicket
+        requestTicket, receiveTicket, setTicket, updateTicketCustomField, updateTicketField, createTicket, resetTicket,
+        requestTickets, receiveTickets, fetchTickets
     }
 );

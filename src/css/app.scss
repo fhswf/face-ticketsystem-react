@@ -36,3 +36,25 @@ html, body {
   height: 230px;
   overflow-y: scroll;
 }
+
+.ticketBox {
+  min-width: 100px;
+  min-height: 150px;
+  max-width: 300px;
+  max-height: 400px;
+  widtH: 300px;
+  height: auto;
+  margin: 30px;
+  padding: 20px;
+  @extend .border;
+  border-radius: 10px;
+  background: linear-gradient(to bottom, #fff 0%, #eff3fa 100%);
+}
+
+.ticketBox .leftItem {
+  float: left;
+}
+
+.ticketBox .rightItem {
+  float: right;
+}

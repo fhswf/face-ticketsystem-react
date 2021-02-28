@@ -3,6 +3,7 @@ import {i18nReducer} from 'react-redux-i18n';
 import {emailOccupied, user} from "./AccountReducers";
 
 import * as disclosureListReducers from './DisclosureListReducers';
+import * as ticketListReducers from './TicketListReducers';
 import config from '../../config/Config';
 
 import { persistReducer, persistCombineReducers } from 'redux-persist'
@@ -17,7 +18,8 @@ const reducers = combineReducers(Object.assign(
     {user, emailOccupied},
     {visitorDisclosure},
     {ticket},
-    disclosureListReducers
+    disclosureListReducers,
+    ticketListReducers
 ));
 
 export default persistReducer(config.storage.root, reducers);
