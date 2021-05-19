@@ -1,15 +1,15 @@
-import React, {Component} from 'react';
-import {ActionCreators} from "../../redux/actions/ActionCreators";
-import {connect} from "react-redux";
-import {bindActionCreators} from "redux";
-import {I18n} from 'react-redux-i18n';
-import {Container, Button, Table, Modal} from "react-bootstrap";
-import {withRouter} from "react-router-dom";
-import {faFilePdf, faQrcode} from "@fortawesome/free-solid-svg-icons";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import React, { Component } from 'react';
+import { ActionCreators } from "../../redux/actions/ActionCreators";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import { I18n } from 'react-redux-i18n';
+import { Container, Button, Table, Modal } from "react-bootstrap";
+import { withRouter } from "react-router-dom";
+import { faFilePdf, faQrcode } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import config from "../../config/Config";
 import QRCode from "qrcode.react";
-import {fillVisitorDisclosurePDF} from "../../backend/PDFOperations";
+import { fillVisitorDisclosurePDF, fillContractorDisclosurePDF } from "../../backend/PDFOperations";
 import download from 'downloadjs'
 
 const QR_CODE_ID = 'qrcode'; // id to the QRCode component, necessary for downloading it.
@@ -38,6 +38,7 @@ class UserDisclosures extends Component {
      */
     componentDidMount() {
         this.props.fetchVisitorDisclosures();
+        this.props.fetchContractorDisclosures();
     }
 
     /**
@@ -46,16 +47,16 @@ class UserDisclosures extends Component {
      * @private
      */
     _renderQRCode() {
-        return <Modal show={this.state.showQR} onHide={() => {this.setState({showQR: false})}} size="sm">
+        return <Modal show={this.state.showQR} onHide={() => { this.setState({ showQR: false }) }} size="sm">
             <Modal.Header closeButton>
                 <Modal.Title>{I18n.t('header.qr')}</Modal.Title>
             </Modal.Header>
             <Modal.Body className={"align-self-center"}>
                 <QRCode value={JSON.stringify(this.state.currentDisclosure)}
-                        renderAs='canvas'
-                        size={256}
-                        id={QR_CODE_ID}
-                        name={QR_CODE_ID}
+                    renderAs='canvas'
+                    size={256}
+                    id={QR_CODE_ID}
+                    name={QR_CODE_ID}
                 />
             </Modal.Body>
             <Modal.Footer>
@@ -90,38 +91,81 @@ class UserDisclosures extends Component {
      * @private
      */
     _renderDisclosures() {
-        if (!this.props.disclosureList || !this.props.disclosureList.items || !this.props.disclosureList.items.visitorDisclosures)
+        if (!this.props.disclosureList || !this.props.disclosureList.items ||
+            (!this.props.disclosureList.items.visitorDisclosures && !this.props.disclosureList.items.contractorDisclosures))
             return <></>;
-        return this.props.disclosureList.items.visitorDisclosures.map(visitorDisclosure => {
-            return <tr key={visitorDisclosure._id}>
-                <td>{
-                    new Date(visitorDisclosure.formDate).toLocaleDateString(config.i18n.time)
-                }</td>
-                <td>{I18n.t('header.disclosure.disclosureVisitor')}</td>
-                <td>
-                    <Button className="mr-2" onClick={() => {
-                        this.props.setVisitorDisclosure(visitorDisclosure);
-                        this.props.history.push(`${this.props.match.path}/visitor`);
-                    }}>
-                        {I18n.t('controls.showDetails')}
-                    </Button>
+        return (
+            <>
+                {
+                    this.props.disclosureList.items.visitorDisclosures ?
+                        this.props.disclosureList.items.visitorDisclosures.map(visitorDisclosure => {
+                            return <tr key={visitorDisclosure._id}>
+                                <td>{
+                                    new Date(visitorDisclosure.formDate).toLocaleDateString(config.i18n.time)
+                                }</td>
+                                <td>{I18n.t('header.disclosure.disclosureVisitor')}</td>
+                                <td>
+                                    <Button className="mr-2" onClick={() => {
+                                        this.props.setVisitorDisclosure(visitorDisclosure);
+                                        this.props.history.push(`${this.props.match.path}/visitor`);
+                                    }}>
+                                        {I18n.t('controls.showDetails')}
+                                    </Button>
 
-                    <Button className="mr-2" onClick={() => {
-                        this._prepareQRCode(visitorDisclosure)
-                    }}>
-                        <FontAwesomeIcon className='icon' icon={faQrcode}/>
-                        {I18n.t('controls.generateQR')}
-                    </Button>
+                                    <Button className="mr-2" onClick={() => {
+                                        this._prepareQRCode(visitorDisclosure)
+                                    }}>
+                                        <FontAwesomeIcon className='icon' icon={faQrcode} />
+                                        {I18n.t('controls.generateQR')}
+                                    </Button>
 
-                    <Button className="mr-2" onClick={() => {
-                        fillVisitorDisclosurePDF(visitorDisclosure, this.props.user.data.value)
-                    }}>
-                        <FontAwesomeIcon className='icon' icon={faFilePdf}/>
-                        {I18n.t('controls.generatePDF')}
-                    </Button>
-                </td>
-            </tr>
-        })
+                                    <Button className="mr-2" onClick={() => {
+                                        fillVisitorDisclosurePDF(visitorDisclosure, this.props.user.data.value)
+                                    }}>
+                                        <FontAwesomeIcon className='icon' icon={faFilePdf} />
+                                        {I18n.t('controls.generatePDF')}
+                                    </Button>
+                                </td>
+                            </tr>
+
+                        }) : ""
+                }
+                {
+                    this.props.disclosureList.items.contractorDisclosures ?
+                        this.props.disclosureList.items.contractorDisclosures.map(contractorDisclosure => {
+                            return <tr key={contractorDisclosure._id}>
+                                <td>{
+                                    new Date(contractorDisclosure.formDate).toLocaleDateString(config.i18n.time)
+                                }</td>
+                                <td>{I18n.t('header.disclosure.disclosureContractor')}</td>
+                                <td>
+                                    <Button className="mr-2" onClick={() => {
+                                        this.props.setContractorDisclosure(contractorDisclosure);
+                                        this.props.history.push(`${this.props.match.path}/contractor`);
+                                    }}>
+                                        {I18n.t('controls.showDetails')}
+                                    </Button>
+
+                                    <Button className="mr-2" onClick={() => {
+                                        this._prepareQRCode(contractorDisclosure)
+                                    }}>
+                                        <FontAwesomeIcon className='icon' icon={faQrcode} />
+                                        {I18n.t('controls.generateQR')}
+                                    </Button>
+
+                                    <Button className="mr-2" onClick={() => {
+                                        fillContractorDisclosurePDF(contractorDisclosure, this.props.user.data.value)
+                                    }}>
+                                        <FontAwesomeIcon className='icon' icon={faFilePdf} />
+                                        {I18n.t('controls.generatePDF')}
+                                    </Button>
+                                </td>
+                            </tr>
+
+                        }) : ""
+                }
+            </>
+        )
     }
 
     /**
@@ -133,14 +177,14 @@ class UserDisclosures extends Component {
             {this._renderQRCode()}
             <Table>
                 <thead>
-                <tr>
-                    <th>{I18n.t('table.date')}</th>
-                    <th>{I18n.t('table.documentType')}</th>
-                    <th>{I18n.t('table.actions')}</th>
-                </tr>
+                    <tr>
+                        <th>{I18n.t('table.date')}</th>
+                        <th>{I18n.t('table.documentType')}</th>
+                        <th>{I18n.t('table.actions')}</th>
+                    </tr>
                 </thead>
                 <tbody>
-                {this._renderDisclosures()}
+                    {this._renderDisclosures()}
                 </tbody>
             </Table>
         </Container>
