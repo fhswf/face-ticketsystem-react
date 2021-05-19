@@ -1,9 +1,9 @@
-import {PDFDocument} from "pdf-lib";
+import { PDFDocument } from "pdf-lib";
 import path from "path";
-import {visitorField2PdfField} from "./mapping/DisclosureMapping";
+import { visitorField2PdfField, contractorField2PdfField } from "./mapping/DisclosureMapping";
 import download from 'downloadjs'
 import config from "../config/Config";
-import {fileToArrayBuffer} from "./Utils";
+import { fileToArrayBuffer } from "./Utils";
 
 /**
  * Checks a Yes/No Checkbox depending on the condition.
@@ -48,7 +48,7 @@ export function fillVisitorDisclosurePDF(disclosure, visitor) {
             form.getTextField(visitorField2PdfField.station).setText(disclosure.station ? disclosure.station : '');
 
             // Symptoms-Info
-            for(let symptom in disclosure.symptoms) {
+            for (let symptom in disclosure.symptoms) {
                 _checkCheckBox(form, disclosure.symptoms[symptom], visitorField2PdfField.symptoms[symptom]);
             }
 
@@ -73,6 +73,66 @@ export function fillVisitorDisclosurePDF(disclosure, visitor) {
             })
         })
 }
+
+/**
+ * Fills out a contractor disclosure.
+ * @param disclosure The disclosure to be used to fill out the PDF file.
+ * @param contractor The contractor (User who filled out the form).
+ */
+export function fillContractorDisclosurePDF(disclosure, contractor) {
+    // TODO Check if this still works in production!
+    fetch(path.join(__dirname, 'public/', config.files.disclosure.contractor))
+        .then(res => res.arrayBuffer())
+        .then(arrayBuffer => PDFDocument.load(arrayBuffer))
+        .then(pdfDoc => {
+            let form = pdfDoc.getForm();
+
+            // Contractor-Info
+            form.getTextField(contractorField2PdfField.contractor.name)
+                .setText(contractor.personal.lastname + ', ' + contractor.personal.firstname);
+            form.getTextField(contractorField2PdfField.contractor.address)
+                .setText(contractor.personal.zipcode + ' ' + contractor.personal.city + ', '
+                    + contractor.personal.address1 + contractor.personal.address2
+                    + (contractor.personal.country ? ', ' : '') + contractor.personal.country
+                );
+            form.getTextField(contractorField2PdfField.contractor.phone)
+                .setText(contractor.personal.phonenumber ? contractor.personal.phonenumber : '');
+
+            // Patient-Info
+            form.getTextField(contractorField2PdfField.firm).setText(disclosure.firm ? disclosure.firm : '');
+            form.getTextField(contractorField2PdfField.station).setText(disclosure.station ? disclosure.station : '');
+
+            // Symptoms-Info
+            for (let symptom in disclosure.symptoms) {
+                try {
+                    _checkCheckBox(form, disclosure.symptoms[symptom], contractorField2PdfField.symptoms[symptom]);
+                }
+                catch (err) {
+                    console.log('mapping for %s failed: %o', symptom, err)
+                }
+            }
+
+            // Return from Risk-Area info
+            _checkCheckBox(form, disclosure.returnRiskarea, contractorField2PdfField.returnRiskarea);
+            form.getTextField(contractorField2PdfField.riskarea).setText(disclosure.riskarea ? disclosure.riskarea : '');
+            form.getTextField(contractorField2PdfField.riskdate).setText(disclosure.riskdate ? disclosure.riskdate : '');
+
+            // Additional information
+            _checkCheckBox(form, disclosure.contactLungs, contractorField2PdfField.contactLungs);
+            _checkCheckBox(form, disclosure.contactCovid, contractorField2PdfField.contactCovid);
+            form.getTextField(contractorField2PdfField.signatureContractor).setText(
+                disclosure.formDate
+                    ? new Date(disclosure.formDate).toLocaleDateString(config.i18n.time)
+                    : new Date().toLocaleDateString(config.i18n.time)
+            );
+
+            // Save the filled out PDF and let the user download it
+            pdfDoc.save().then(pdfBytes => {
+                download(pdfBytes, disclosure._id + ".pdf", "application/pdf");
+            })
+        })
+}
+
 
 /**
  * Determine the form field of a PDF Document and creates a console log containing these field informations.

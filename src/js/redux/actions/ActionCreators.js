@@ -15,12 +15,20 @@ import {
     receiveVisitorDisclosure,
     createVisitorDisclosure,
     setVisitorDisclosure,
-    updateVisitorDisclosureField
+    updateVisitorDisclosureField,
+    requestContractorDisclosure,
+    receiveContractorDisclosure,
+    createContractorDisclosure,
+    setContractorDisclosure,
+    updateContractorDisclosureField
 } from './DisclosureActions';
 import {
     requestVisitorDisclosures,
     receiveVisitorDisclosures,
-    fetchVisitorDisclosures
+    fetchVisitorDisclosures,
+    requestContractorDisclosures,
+    receiveContractorDisclosures,
+    fetchContractorDisclosures
 } from "./DisclosureListActions";
 import {
     requestTickets,
@@ -40,7 +48,10 @@ export const ActionCreators = Object.assign({},
         updateUser, setUser,
         requestVisitorDisclosure, receiveVisitorDisclosure, createVisitorDisclosure, setVisitorDisclosure,
         updateVisitorDisclosureField,
+        requestContractorDisclosure, receiveContractorDisclosure, createContractorDisclosure, setContractorDisclosure,
+        updateContractorDisclosureField,
         requestVisitorDisclosures, receiveVisitorDisclosures, fetchVisitorDisclosures,
+        requestContractorDisclosures, receiveContractorDisclosures, fetchContractorDisclosures,
         requestTicket, receiveTicket, setTicket, updateTicketCustomField, updateTicketField, createTicket, resetTicket,
         requestTickets, receiveTickets, fetchTickets
     }

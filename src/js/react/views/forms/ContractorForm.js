@@ -10,11 +10,11 @@ import _ from "lodash";
 import SimpleDialog from "../../components/SimpleDialog";
 
 /**
- * A React Component for creating a new visitor disclosure.
+ * A React Component for creating a new contractor disclosure.
  */
-class VisitorForm extends Component {
+class ContractorForm extends Component {
     /**
-     * Create a new VisitorForm.
+     * Create a new ContractorForm.
      * @param props The properties of the Component.
      */
     constructor(props) {
@@ -30,7 +30,7 @@ class VisitorForm extends Component {
     }
 
     /**
-     * Create the new visitor disclosure.
+     * Create the new contractor disclosure.
      * @param event The <Form>-Event to be validated.
      * @private
      */
@@ -43,7 +43,7 @@ class VisitorForm extends Component {
             this.setState({ validated: true });
         }
         else {
-            this.props.createVisitorDisclosure()
+            this.props.createContractorDisclosure()
                 .then(disclosure => {
                     this.setState({ saveSuccess: true })
                 })
@@ -55,7 +55,7 @@ class VisitorForm extends Component {
 
     /**
      * Render a <Form.Group> for two Radio-Buttons.
-     * @param valueProperty The name of the value of the visitor disclosure to be related to the <Form.Check>.
+     * @param valueProperty The name of the value of the contractor disclosure to be related to the <Form.Check>.
      * @param labelProperty The i18n value for the Label to be displayed and used as the <Form.Check>-Name.
      * @param doRenderLabel If true, the <Form.Label> will be rendered. Default is true.
      * @returns The <Form.Group> to be rendered.
@@ -70,17 +70,17 @@ class VisitorForm extends Component {
                 <Form.Check type="radio"
                     disabled={this.props.readOnly}
                     onChange={() => {
-                        this.props.updateVisitorDisclosureField(valueProperty, true);
+                        this.props.updateContractorDisclosureField(valueProperty, true);
                     }}
-                    checked={_.get(this.props.visitorDisclosure, valueProperty)}
+                    checked={_.get(this.props.contractorDisclosure, valueProperty)}
                     name={labelProperty}
                     required inline label={I18n.t('data.yes')} />
                 <Form.Check type="radio"
                     disabled={this.props.readOnly}
                     onChange={() => {
-                        this.props.updateVisitorDisclosureField(valueProperty, false);
+                        this.props.updateContractorDisclosureField(valueProperty, false);
                     }}
-                    checked={_.get(this.props.visitorDisclosure, valueProperty) == false}
+                    checked={_.get(this.props.contractorDisclosure, valueProperty) == false}
                     name={labelProperty}
                     required inline label={I18n.t('data.no')} />
                 <br />
@@ -93,7 +93,7 @@ class VisitorForm extends Component {
 
     /**
      * Render a <Form.Group> for a text field.
-     * @param valueProperty The name of the value of the visitor disclosure to be related to the <Form.Control>.
+     * @param valueProperty The name of the value of the contractor disclosure to be related to the <Form.Control>.
      * @param labelProperty The i18n value for the Label to be displayed and used as the <Form.Check>-Name.
      * @param feedbackProperty The i18n value for displaying an error message, if the input is invalid.
      * @param required Whether or not the field is required. Default is true.
@@ -106,11 +106,11 @@ class VisitorForm extends Component {
             <Col>
                 <Form.Control type="text" placeholder={I18n.t(labelProperty)}
                     onChange={(event) => {
-                        this.props.updateVisitorDisclosureField(valueProperty, event.target.value)
+                        this.props.updateContractorDisclosureField(valueProperty, event.target.value)
                     }}
                     required={required}
                     disabled={this.props.readOnly}
-                    value={_.get(this.props.visitorDisclosure, valueProperty) || ''}
+                    value={_.get(this.props.contractorDisclosure, valueProperty) || ''}
                 />
                 <Form.Control.Feedback type="invalid">
                     {I18n.t(feedbackProperty)}
@@ -144,19 +144,25 @@ class VisitorForm extends Component {
             />
             <Row>
                 <Col>
-                    <h2 id='special-title'>{I18n.t('header.disclosure.disclosureVisitor')}</h2>
-                    <h4>{I18n.t('information.disclosure.greetingVisitor')}</h4>
-                    <p>{I18n.t('information.disclosure.introduction')}</p>
+                    <h2 id='special-title'>{I18n.t('header.disclosure.disclosureContractor')}</h2>
+                    <h4>{I18n.t('information.disclosure.greetingContractor')}</h4>
+                    <p>{I18n.t('information.disclosure.introductionContractor')}</p>
+                    <p style={{ color: "#a50b32", textSize: '120%' }}>{I18n.t('information.disclosure.noticeContractor')}</p>
                 </Col>
             </Row>
             <Row>
                 <Col>
-                    <h4>{I18n.t('header.disclosure.patient')}</h4>
+                    <h4>{I18n.t('header.disclosure.contractor')}</h4>
                     <Form onSubmit={this._finalize} noValidate validated={this.state.validated}>
-                        {this._renderTextFieldFormGroup('patient', 'data.disclosure.name', 'feedback.disclosure.name')}
+                        {this._renderTextFieldFormGroup('firm', 'data.disclosure.firm', 'feedback.disclosure.firm')}
+                        {this._renderTextFieldFormGroup('name', 'data.disclosure.name', 'feedback.disclosure.name')}
+                        {this._renderTextFieldFormGroup('address', 'data.disclosure.address', 'feedback.disclosure.address')}
+                        {this._renderTextFieldFormGroup('phone', 'data.disclosure.phone', 'feedback.disclosure.phone')}
                         {this._renderTextFieldFormGroup("station", 'data.disclosure.station', 'feedback.disclosure.station')}
+
                         <h4>{I18n.t('header.disclosure.healthComplains')}</h4>
                         <h5 id="special-title">{I18n.t('header.disclosure.symptoms')}:</h5>
+                        {this._renderRadioButtonFormGroup('symptoms.air', 'data.disclosure.air')}
                         {this._renderRadioButtonFormGroup('symptoms.cough', 'data.disclosure.cough')}
                         {this._renderRadioButtonFormGroup('symptoms.musclePain', 'data.disclosure.musclePain')}
                         {this._renderRadioButtonFormGroup('symptoms.fever', 'data.disclosure.fever')}
@@ -166,28 +172,24 @@ class VisitorForm extends Component {
                         {this._renderRadioButtonFormGroup('symptoms.headache', 'data.disclosure.headache')}
                         {this._renderRadioButtonFormGroup('symptoms.taste', 'data.disclosure.taste')}
                         {this._renderRadioButtonFormGroup('symptoms.smell', 'data.disclosure.smell')}
-                        <h5>{I18n.t('header.disclosure.airwaySymptoms')}</h5>
-                        {this._renderRadioButtonFormGroup('symptoms.air', 'data.disclosure.air')}
-                        {this._renderRadioButtonFormGroup('symptoms.breathless', 'data.disclosure.breathless')}
+
                         <p>{I18n.t('question.disclosure.returnRiskarea')}</p>
                         {this._renderRadioButtonFormGroup('returnRiskarea', 'question.disclosure.returnRiskarea', false)}
                         {
-                            this.props.visitorDisclosure.returnRiskarea && this._renderTextFieldFormGroup('riskarea', 'data.disclosure.riskarea', 'feedback.disclosure.riskarea')
+                            this.props.contractorDisclosure.returnRiskarea && this._renderTextFieldFormGroup('riskarea', 'data.disclosure.riskarea', 'feedback.disclosure.riskarea')
                         }
                         {
-                            this.props.visitorDisclosure.returnRiskarea && this._renderTextFieldFormGroup('riskdate', 'data.disclosure.riskdate', 'feedback.disclosure.riskdate')
+                            this.props.contractorDisclosure.returnRiskarea && this._renderTextFieldFormGroup('riskdate', 'data.disclosure.riskdate', 'feedback.disclosure.riskdate')
                         }
-                        <p>{I18n.t('question.disclosure.quarantine')}</p>
-                        {this._renderRadioButtonFormGroup('quarantine', 'question.disclosure.quarantine', false)}
-                        <p><u>{I18n.t('information.disclosure.quarantine')}</u></p>
+
                         <p>{I18n.t('question.disclosure.contactLungs')}</p>
                         {this._renderRadioButtonFormGroup('contactLungs', 'question.disclosure.contactLungs', false)}
                         <p>{I18n.t('question.disclosure.contactCovid')}</p>
                         {this._renderRadioButtonFormGroup('contactCovid', 'question.disclosure.contactCovid', false)}
                         <h5>{I18n.t('header.disclosure.note')}</h5>
-                        <p>{I18n.t('information.disclosure.noAccess')}</p>
+                        <p>{I18n.t('information.disclosure.noAccessContractor')}</p>
                         <h5>{I18n.t('header.disclosure.selfCommitment')}</h5>
-                        <p>{I18n.t('information.disclosure.selfCommitment')}</p>
+                        <p>{I18n.t('information.disclosure.selfCommitmentContractor')}</p>
 
                         <h5>{I18n.t('header.disclosure.dataPersistence')}</h5>
                         <Form.Group as={Row} className={"mb-0 mt-0 pt-0"}>
@@ -221,7 +223,7 @@ class VisitorForm extends Component {
     }
 }
 
-VisitorForm.propTypes = {
+ContractorForm.propTypes = {
     readOnly: PropTypes.bool    // Whether or not the Form is editable or not
 };
 
@@ -232,7 +234,7 @@ VisitorForm.propTypes = {
  */
 function mapStateToProps(state) {
     return {
-        visitorDisclosure: state.visitorDisclosure.value
+        contractorDisclosure: state.contractorDisclosure.value
     };
 }
 
@@ -244,4 +246,4 @@ function mapDispatchToProps(dispatch) {
     return bindActionCreators(ActionCreators, dispatch);
 }
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(VisitorForm));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ContractorForm));

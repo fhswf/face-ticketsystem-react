@@ -8,8 +8,8 @@ import Cookies from 'cookies-js';
  */
 const config = {
     backend: {
-        //endpoint: "https://jupiter.fh-swf.de/fts-api"
-        endpoint: "http://localhost:12000"
+        endpoint: "https://jupiter.fh-swf.de/fts-api"
+        //endpoint: "http://localhost:12000"
     },
     i18n: {
         locale: 'de',
@@ -17,7 +17,8 @@ const config = {
     },
     files: {
         disclosure: {
-            visitor: 'Selbstauskunft_Besucher_20201119.pdf'
+            visitor: 'Selbstauskunft_Besucher_20201119.pdf',
+            contractor: 'Handwerker_Selbstauskunft_20201119.pdf'
         }
     },
     controls: {

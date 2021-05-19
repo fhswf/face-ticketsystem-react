@@ -15,7 +15,8 @@ const translationObject = {
             logout: 'Ausloggen',
             disclosures: 'Selbstauskünfte',
             showDisclosures: 'Meine Selbstauskünfte anzeigen',
-            addVisitorDisclosure: 'Neue Selbstauskunft für Besucher*innen erstellen'
+            addVisitorDisclosure: 'Neue Selbstauskunft für Besucher*innen erstellen',
+            addContractorDisclosure: 'Neue Selbstauskunft für Handwerker*innen erstellen'
         },
         header: {
             login: 'Anmelden',
@@ -26,7 +27,9 @@ const translationObject = {
             updateUser: 'Account bearbeiten',
             disclosure: {
                 disclosureVisitor: 'Selbstauskunft für Besucher*innen',
+                disclosureContractor: 'Selbstauskunft/Passierschein für Handwerker*innen/Dienstleister',
                 patient: 'Besuchter Patient',
+                contractor: 'Handwerker*innen / Dienstleister',
                 healthComplains: 'Angaben zu möglichen Gesundheitsbeschwerden',
                 symptoms: 'Aktuelle Symptome oder innerhalb der letzten 14 Tage neu aufgetreten',
                 airwaySymptoms: 'Akute Atemwegssymptome',
@@ -137,6 +140,9 @@ const translationObject = {
             no: 'Nein',
             disclosure: {
                 name: 'Name, Vorname',
+                firm: 'Firma',
+                address: 'Anschrift (privat)',
+                phone: 'Telefonnummer (privat)',
                 station: 'Station',
                 cough: 'Husten',
                 musclePain: 'Muskel-/Gelenkschmerzen',
@@ -200,7 +206,7 @@ const translationObject = {
             saveDisclosure: 'Selbstauskunft abschließen',
             showDetails: 'Details einsehen',
             generateQR: 'QR-Code erstellen',
-            generatePDF: 'PDF-Datei erstellen',
+            generatePDF: 'PDF erstellen',
             download: 'Download',
             ok: 'Ok',
             close: 'Schließen',
@@ -212,18 +218,31 @@ const translationObject = {
                 + 'evtl. etwas Zeit in Anspruch nehmen.',
             disclosure: {
                 greetingVisitor: 'Sehr geehrte Besucherinnen und Besucher,',
+                greetingContractor: 'Sehr geehrte Damen und Herren,',
                 introduction: 'zu Ihrem eigenen Schutz sowie, dem Schutz von Patienten und Klinikmitarbeitern möchten '
                     + 'wir Sie bitten, folgende Angaben zu machen bzw. Fragen zu beantworten. Bitte bringen Sie den '
                     + 'QR-Code oder ausgedruckten und ausgefüllten Fragebogen unterschrieben zu Ihrem Patientenbesuch '
                     + 'mit. Vielen Dank vorab dafür.',
+                introductionContractor: 'zu Ihrem eigenen Schutz sowie, dem Schutz von Patienten und Klinikmitarbeitern möchten '
+                    + 'wir Sie bitten, folgende Angaben zu machen bzw. Fragen zu beantworten. '
+                    + 'Bitte bringen Sie den QR-Code oder ausgedruckten und ausgefüllten Fragebogen unterschrieben mit. '
+                    + 'Vielen Dank vorab dafür. ',
+                noticeContractor: 'Selbstauskunft/ Passierschein ist mit Tagesdatum mitzuführen und am Ende des Arbeitstages spätestens am '
+                    + 'folgenden Tag bis 12:00 Uhr am Checkpoint II (Haupthaus, EG) oder an einen technischen Mitarbeiter abzugeben.',
                 quarantine: 'Sollten Sie sich zurzeit in häuslicher Qurantäne befinden, möchten wir Sie bitten, sich '
                     + 'vorab mit der behandelnden Fachabteilung telefonisch in Verbindung zu setzen.',
                 noAccess: 'Sollten Sie eine dieser Fragen mit „Ja“ beantworten, bitten wir um Verständnis, dass ein ' +
                     'Besuch dann leider nicht möglich ist.',
+                noAccessContractor: 'Sollten Sie eine dieser Fragen mit „Ja“ beantworten, bitten wir um Verständnis, dass ein ' +
+                    'Zugang dann leider nicht möglich ist.',
                 selfCommitment: 'Als Besucher verpflichte ich mich, mich ausschließlich beim benannten Patienten und ' +
                     'in dessen Zimmer aufzuhalten, während des gesamten Besuchs einen Mund-Nasen-Schutz zu tragen und ' +
                     'einen Mindestabstand von 1,5 m zu wahren. Die geltenden Hygienerichtlinien wurden mir mitgeteilt. ' +
                     'Ich verpflichte mich, diese einzuhalten.',
+                selfCommitmentContractor: 'Als externer Handwerker*innen/Dienstleister verpflichte ich mich, ausschließlich beim ' +
+                    'benannten Einsatzort aufzuhalten, während der gesamten Tätigkeit/Besuchs einen' +
+                    'Mund-Nasen-Schutz zu tragen und einen Mindestabstand von 1,5 m zu wahren. Die ' +
+                    'geltenden Hygienerichtlinien wurden mir mitgeteilt. Ich verpflichte mich, diese einzuhalten.',
                 dataPersistence1: 'Ich bin damit einverstanden, dass die von mir erhobenen Daten gespeichert werden. ' +
                     'Die Angaben sind gem. der "Coronaschutzverordnung-NRW" freiwillig, aber ohne Angabe dürfen wir ' +
                     'Ihnen keinen Zugang gewähren.',
