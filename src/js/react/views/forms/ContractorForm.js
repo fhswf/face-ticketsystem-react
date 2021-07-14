@@ -160,34 +160,53 @@ class ContractorForm extends Component {
                         {this._renderTextFieldFormGroup('phone', 'data.disclosure.phone', 'feedback.disclosure.phone')}
                         {this._renderTextFieldFormGroup("station", 'data.disclosure.station', 'feedback.disclosure.station')}
 
-                        <h4>{I18n.t('header.disclosure.healthComplains')}</h4>
-                        <h5 id="special-title">{I18n.t('header.disclosure.symptoms')}:</h5>
-                        {this._renderRadioButtonFormGroup('symptoms.air', 'data.disclosure.air')}
-                        {this._renderRadioButtonFormGroup('symptoms.cough', 'data.disclosure.cough')}
-                        {this._renderRadioButtonFormGroup('symptoms.musclePain', 'data.disclosure.musclePain')}
-                        {this._renderRadioButtonFormGroup('symptoms.fever', 'data.disclosure.fever')}
-                        {this._renderRadioButtonFormGroup('symptoms.vomit', 'data.disclosure.vomit')}
-                        {this._renderRadioButtonFormGroup('symptoms.throat', 'data.disclosure.throat')}
-                        {this._renderRadioButtonFormGroup('symptoms.bellyache', 'data.disclosure.bellyache')}
-                        {this._renderRadioButtonFormGroup('symptoms.headache', 'data.disclosure.headache')}
-                        {this._renderRadioButtonFormGroup('symptoms.taste', 'data.disclosure.taste')}
-                        {this._renderRadioButtonFormGroup('symptoms.smell', 'data.disclosure.smell')}
+                        <h4>{I18n.t('data.disclosure.immunityStatus')}</h4>
+                        {I18n.t('data.disclosure.vaccinated')}
+                        {this._renderRadioButtonFormGroup('vaccinated', 'data.disclosure.confirmed')}
+                        {I18n.t('data.disclosure.recovered')}
+                        {this._renderRadioButtonFormGroup('recovered', 'data.disclosure.confirmed')}
+                        {I18n.t('data.disclosure.tested')}
+                        {this._renderRadioButtonFormGroup('tested', 'data.disclosure.confirmed')}
 
-                        <p>{I18n.t('question.disclosure.returnRiskarea')}</p>
-                        {this._renderRadioButtonFormGroup('returnRiskarea', 'question.disclosure.returnRiskarea', false)}
-                        {
-                            this.props.contractorDisclosure.returnRiskarea && this._renderTextFieldFormGroup('riskarea', 'data.disclosure.riskarea', 'feedback.disclosure.riskarea')
-                        }
-                        {
-                            this.props.contractorDisclosure.returnRiskarea && this._renderTextFieldFormGroup('riskdate', 'data.disclosure.riskdate', 'feedback.disclosure.riskdate')
-                        }
+                        <p>Die Dokumente zum Nachweis des Immunitäts bzw. Teststatus müssen Sie mit sich führen und bei Aufforderung vorzeigen.</p>
 
-                        <p>{I18n.t('question.disclosure.contactLungs')}</p>
-                        {this._renderRadioButtonFormGroup('contactLungs', 'question.disclosure.contactLungs', false)}
-                        <p>{I18n.t('question.disclosure.contactCovid')}</p>
-                        {this._renderRadioButtonFormGroup('contactCovid', 'question.disclosure.contactCovid', false)}
-                        <h5>{I18n.t('header.disclosure.note')}</h5>
-                        <p>{I18n.t('information.disclosure.noAccessContractor')}</p>
+                        {
+                            this.props.contractorDisclosure.vaccinated ||
+                                this.props.contractorDisclosure.recovered ||
+                                this.props.contractorDisclosure.tested ?
+                                <></>
+                                :
+                                <>
+                                    <h4>{I18n.t('header.disclosure.healthComplains')}</h4>
+                                    <h5 id="special-title">{I18n.t('header.disclosure.symptoms')}:</h5>
+                                    {this._renderRadioButtonFormGroup('symptoms.air', 'data.disclosure.air')}
+                                    {this._renderRadioButtonFormGroup('symptoms.cough', 'data.disclosure.cough')}
+                                    {this._renderRadioButtonFormGroup('symptoms.musclePain', 'data.disclosure.musclePain')}
+                                    {this._renderRadioButtonFormGroup('symptoms.fever', 'data.disclosure.fever')}
+                                    {this._renderRadioButtonFormGroup('symptoms.vomit', 'data.disclosure.vomit')}
+                                    {this._renderRadioButtonFormGroup('symptoms.throat', 'data.disclosure.throat')}
+                                    {this._renderRadioButtonFormGroup('symptoms.bellyache', 'data.disclosure.bellyache')}
+                                    {this._renderRadioButtonFormGroup('symptoms.headache', 'data.disclosure.headache')}
+                                    {this._renderRadioButtonFormGroup('symptoms.taste', 'data.disclosure.taste')}
+                                    {this._renderRadioButtonFormGroup('symptoms.smell', 'data.disclosure.smell')}
+
+                                    <p>{I18n.t('question.disclosure.returnRiskarea')}</p>
+                                    {this._renderRadioButtonFormGroup('returnRiskarea', 'question.disclosure.returnRiskarea', false)}
+                                    {
+                                        this.props.contractorDisclosure.returnRiskarea && this._renderTextFieldFormGroup('riskarea', 'data.disclosure.riskarea', 'feedback.disclosure.riskarea')
+                                    }
+                                    {
+                                        this.props.contractorDisclosure.returnRiskarea && this._renderTextFieldFormGroup('riskdate', 'data.disclosure.riskdate', 'feedback.disclosure.riskdate')
+                                    }
+
+                                    <p>{I18n.t('question.disclosure.contactLungs')}</p>
+                                    {this._renderRadioButtonFormGroup('contactLungs', 'question.disclosure.contactLungs', false)}
+                                    <p>{I18n.t('question.disclosure.contactCovid')}</p>
+                                    {this._renderRadioButtonFormGroup('contactCovid', 'question.disclosure.contactCovid', false)}
+                                    <h5>{I18n.t('header.disclosure.note')}</h5>
+                                    <p>{I18n.t('information.disclosure.noAccessContractor')}</p>
+                                </>
+                        }
                         <h5>{I18n.t('header.disclosure.selfCommitment')}</h5>
                         <p>{I18n.t('information.disclosure.selfCommitmentContractor')}</p>
 
