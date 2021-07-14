@@ -156,7 +156,12 @@ const translationObject = {
                 air: 'Luftnot',
                 breathless: 'Kurzatmigkeit',
                 riskarea: 'Risikogebiet',
-                riskdate: 'Rückkehrdatum'
+                riskdate: 'Rückkehrdatum',
+                immunityStatus: 'Immunitäts- bzw. Teststatus',
+                confirmed: 'Nachweis vorhanden',
+                recovered: 'Genesen: Nachweis einer durchgemachten Infektion mittels PCR-Test, der max. 6 Monate und mindestens 28 Tage zurückliegt.',
+                vaccinated: 'Vollständig geimpft: Nachweis über die vollständige Impfung – frühestens 14 Tage nach der Zweitimpfung bzw. beim Impfstoff Janssen-Cilag frühestens 14 Tage nach der Einmalimpfung.',
+                tested: 'Negativ getestet: Negativer COVID-19 Antigen-Test nicht älter als 48 h oder negativer COVID-19 PCR-Test nicht älter als 72 h (kein Selbsttest!).'
             },
             ticket: {
                 name: 'Ticketbezeichnung',

@@ -70,6 +70,9 @@ export const emptyContractorDisclosure = {
     contractor: emptyUser,
     patient: '',
     station: '',
+    vaccinated: false,
+    recovered: false,
+    tested: false,
     symptoms: {
         cough: null,
         musclePain: null,
